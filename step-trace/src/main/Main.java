@@ -440,10 +440,48 @@ public class Main extends JFrame {
                         return 9;
                     }
                 }
-            } else if (firstDigit < 9 && firstDigit > 5) {
-
             } else if (firstDigit == 5 || firstDigit == 9) {
                 // Custom case.
+            	if (!teethExist) {
+            		if (cs.getHoleCount() != 0) {
+            			if (!holesEquidistant && !holesEvenlyDistributed) {
+            				print("Hole pattern does not exist.");
+            				if (holesSameOrientation) {
+                				print("Holes similarly oriented.");
+                				return 1;
+                			} else {
+                				print("Holes not similarly oriented.");
+                				return 2;
+                			}
+            			} else if (holesEquidistant || holesEvenlyDistributed) {
+            				print("Hole pattern exists.");
+            				if (holesSameOrientation) {
+                				print("Holes similarly oriented.");
+                				return 3;
+                			} else {
+                				print("Holes not similarly oriented.");
+                				return 4;
+                			}
+            			}
+            			return 6;
+            		} else {
+            			return 5;
+            		}
+            	} else {
+            		if (cs.getHoleCount() == 0) {
+            			print("Teeth found, no holes.");
+            			return 7;
+            		} else if(cs.getHoleCount() != 0) {
+            			print("Teeth found, holes found.");
+            			return 8;
+            		} else {
+            			print("Miscellaneous case.");
+            			return 9;
+            		}
+            	}
+            } else if (firstDigit == 5 || firstDigit == 9) {
+                // Custom case.
+            	print("This is a custom case.");
                 return firstDigit;
             } else {
                 // Default case:
