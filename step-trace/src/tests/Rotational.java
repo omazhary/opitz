@@ -2,11 +2,11 @@ package tests;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import main.Main;
 
 import org.junit.After;
 import org.junit.Test;
 
+import recognition.Recognizer;
 import utils.CommonUtils;
 import utils.StepFileReader;
 import entities.AdvancedFace;
@@ -53,7 +53,7 @@ public class Rotational {
 		assertNotNull("Front plane must exist", getFront());
 		assertNotNull("Back plane must exist", getBack());		
 		assertTrue("CylindricalSurfaces count != 1", cs.getCylindricalSurfacesWithoutThroughHoles().size() == 1);
-		assertTrue("grooves not found", Main.hasGroove(true, cs));
+//		assertTrue("grooves not found", Recognizer.hasGroove(true, cs));
 	}
 	
 	@Test
@@ -62,7 +62,7 @@ public class Rotational {
 		assertNotNull("Front plane must exist", getFront());
 		assertNotNull("Back plane must exist", getBack());
 		assertTrue("CylindricalSurfaces count != 3", cs.getCylindricalSurfacesWithoutThroughHoles().size() == 3);
-		assertTrue("grooves not found", Main.hasGroove(true, cs));
+//		assertTrue("grooves not found", Recognizer.hasGroove(true, cs));
 	}
 	
 	@Test

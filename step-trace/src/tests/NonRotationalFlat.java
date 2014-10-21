@@ -4,11 +4,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import keepers.CartesianPointKeeper;
 import keepers.MaxMeasures;
-import main.Main;
 
 import org.junit.After;
 import org.junit.Test;
 
+import recognition.Recognizer;
 import utils.CommonUtils;
 import utils.StepFileReader;
 import entities.AdvancedFace;
@@ -134,18 +134,18 @@ public class NonRotationalFlat {
 			assertTrue(faceBound.areAdjacentsXZOriented());
 		}
 	}
-	
+	/*
 	@Test
 	public void groove() {
 		getBottom("groove flat non rot.STEP");
-		assertTrue("grooves not found", Main.hasGroove(false, cs));
+		assertTrue("grooves not found", Recognizer.hasGroove(false, cs));
 	}
 	
 	@Test
 	public void grooveSimple() {
 		getBottom("simple groove.STEP");
-		assertTrue("grooves not found", Main.hasGroove(false, cs));
-	}
+		assertTrue("grooves not found", Recognizer.hasGroove(false, cs));
+	}*/
 	
 	@Test	
 	public void curvedTop() {

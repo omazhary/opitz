@@ -1,4 +1,4 @@
-package main;
+package recognition;
 
 import entities.AdvancedFace;
 import entities.CartesianPoint;
@@ -30,20 +30,22 @@ import keepers.MaxMeasures;
 import utils.CommonUtils;
 import utils.StepFileReader;
 
-public class Main extends JFrame {
+public class Recognizer {
 
-    private static final long serialVersionUID = 1L;
+    private final long serialVersionUID = 1L;
 
-    private static List<String> trace = new ArrayList<String>();
-    private static boolean showGUI = true;
-    private static ClosedShell cs;
-    private static boolean isTest;
-    private static MaxMeasures m;
-    private static CartesianPoint absoluteCenter;
+    private List<String> trace = new ArrayList<String>();
+    private boolean showGUI = true;
+    private ClosedShell cs;
+    private boolean isTest;
+    private MaxMeasures m;
+    private CartesianPoint absoluteCenter;
+    private String code;
 
-    public static String mainProcedure(String filePath, boolean isTest) {
-        Main.isTest = isTest;
-        print("-----start ");
+    public String mainProcedure(String filePath, boolean isTest) {
+    	this.clearAll();
+        this.isTest = isTest;
+        print("**** Start: " + filePath);
         int firstDigit = -1, secondDigit = -1, thirdDigit = -1, fourthDigit = -1, fifthDigit = -1;
         StepFileReader sfr = new StepFileReader(filePath == null ? (CommonUtils._PATH_PRODUCTION + "50.03220-01/03220-01.stp") : filePath);
         cs = new ClosedShell(sfr.getClosedShellLineId());
@@ -182,11 +184,12 @@ public class Main extends JFrame {
         fifthDigit = getFifthDigit(firstDigit);
 
         String res = "" + firstDigit + secondDigit + thirdDigit + fourthDigit + fifthDigit;
-        print("-----done: " + res);
+        print("**** Done: " + res);
+        this.code = res;
         return res;
     }
 
-    private static boolean isBottomLessThanCircleOfCylinder(List<AdvancedFace> cylinders, AdvancedFace bottom) {
+    private boolean isBottomLessThanCircleOfCylinder(List<AdvancedFace> cylinders, AdvancedFace bottom) {
         float biggestRadius = 0;
         for (AdvancedFace af : cylinders) {
             if (af.getSurfGeometry() instanceof CylindricalSurface && af.getSurfGeometry().getDirection().isYOriented()) {
@@ -226,7 +229,7 @@ public class Main extends JFrame {
                 && maxLength < biggestRadius;
     }
 
-    private static int getThirdDigitRotational(int cylinderCount) {
+    private int getThirdDigitRotational(int cylinderCount) {
         if (cylinderCount == 1 || cylinderCount == 2) {
             if (cs.getThroughHolesCount() != 0) {
                 print("inner bore is found");
@@ -242,7 +245,7 @@ public class Main extends JFrame {
         return 0;
     }
 
-    private static int getExternMachinigRotational(int cylinderCount) {
+    private int getExternMachinigRotational(int cylinderCount) {
         if (hasGroove(true, cs)) {
             print("machining: external groove is found");
             if (cylinderCount == 1 || cylinderCount == 2) {
@@ -263,7 +266,7 @@ public class Main extends JFrame {
         return 0;
     }
 
-    public static boolean hasGroove(boolean isRotational, ClosedShell cs) {
+    public boolean hasGroove(boolean isRotational, ClosedShell cs) {
         if (isRotational) {
             for (AdvancedFace af : cs.getCylindricalSurfacesWithoutThroughHoles()) {
                 for (FaceBound fb : af.getFaceInnerBound()) {
@@ -284,7 +287,7 @@ public class Main extends JFrame {
         return false;
     }
 
-    private static int getFourthDigit() {
+    private int getFourthDigit() {
         int fourthDigit = -1;
         if (cs.getTopPlane() == null) {
             return 0;
@@ -331,7 +334,7 @@ public class Main extends JFrame {
         return fourthDigit;
     }
 
-    private static int getThirdDigit(AdvancedFace bottom) {
+    private int getThirdDigit(AdvancedFace bottom) {
         int thirdDigit = -1;
         int innerHoles = cs.getThroughHolesCount();
         if (innerHoles == 0) {
@@ -350,7 +353,7 @@ public class Main extends JFrame {
         return thirdDigit;
     }
 
-    private static int getFifthDigit(int firstDigit) {
+    private int getFifthDigit(int firstDigit) {
         int result = 5;
         // If there are no holes and no teeth.
         boolean teethExist = cs.teethExist(0.6);
@@ -498,22 +501,51 @@ public class Main extends JFrame {
      * measurements of the model.
      * @return A CartesianPoint object that represents the center.
      */
-    private static CartesianPoint getAbsoluteCenter(MaxMeasures measures) {
+    private CartesianPoint getAbsoluteCenter(MaxMeasures measures) {
         float x = ((measures.maxX - measures.minX) / 2) + measures.minX;
         float y = ((measures.maxY - measures.minY) / 2) + measures.minY;
         float z = ((measures.maxZ - measures.minZ) / 2) + measures.minZ;
         return new CartesianPoint(x, y, z);
     }
 
-    private static void print(String s) {
+    private void print(String s) {
         if (isTest) {
             return;
         }
-        System.out.println(s);
+        //System.out.println(s);
         trace.add(s);
     }
+    
+    /**
+     * Clears all information stored in this object.
+     */
+    private void clearAll() {
+    	this.trace.clear();
+        this.showGUI = true;
+        this.cs = null;
+        this.isTest = true;
+        this.m = null;
+        this.absoluteCenter = null;
+        this.code = "";
+    }
+    
+    /**
+     * Getter for the log information.
+     * @return A List of String objects that contains a step-by-step account of the performed operations.
+     */
+    public List<String> getTrace() {
+    	return this.trace;
+    }
+    
+    /**
+     * Getter for the code.
+     * @return A string containing the Opitz code of the model.
+     */
+    public String getCode() {
+    	return this.code;
+    }
 
-    public Main() {
+    /*public Recognizer() {
         JPanel p = new JPanel();
         open.addActionListener(new OpenL());
         p.add(open);
@@ -531,13 +563,15 @@ public class Main extends JFrame {
         p.add(scrollPane);
         p.add(Box.createVerticalStrut(5)); //extra space
         cp.add(p, BorderLayout.NORTH);
+    	
     }
-
+    
+    
     class OpenL implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
             JFileChooser c = new JFileChooser();
-            int rVal = c.showOpenDialog(Main.this);
+            int rVal = c.showOpenDialog(Recognizer.this);
             if (rVal == JFileChooser.APPROVE_OPTION) {
                 String path = c.getSelectedFile().getAbsolutePath();
                 filename.setText(path);
@@ -558,7 +592,7 @@ public class Main extends JFrame {
 
     public static void main(String[] arr) {
         if (showGUI) {
-            run(new Main(), 450, 250);
+            run(new Recognizer(), 450, 250);
         } else {
             mainProcedure(null, false);
         }
@@ -576,5 +610,5 @@ public class Main extends JFrame {
     private JTextField filename = new JTextField();
     private JTextArea textArea = new JTextArea();
     private JButton open = new JButton("Open STEP File");
-
+*/
 }
