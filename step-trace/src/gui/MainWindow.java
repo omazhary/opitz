@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ScrollPaneConstants;
 
 import recognition.Recognizer;
 import sun.awt.VerticalBagLayout;
@@ -26,6 +27,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
+import javax.swing.border.BevelBorder;
+import javax.swing.JList;
+import javax.swing.SwingConstants;
 
 public class MainWindow extends JFrame {
 
@@ -33,6 +37,7 @@ public class MainWindow extends JFrame {
 	private JTextField txtFilePath;
 	private Recognizer recog;
 	private JTextField txtRecCode;
+	private JTextArea textArea_log;
 
 	/**
 	 * Launch the application.
@@ -82,12 +87,9 @@ public class MainWindow extends JFrame {
 		btnChooseFile.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		txtFilePath = new JTextField();
-		txtFilePath.setText("File path...");
+		txtFilePath.setHorizontalAlignment(SwingConstants.TRAILING);
 		txtFilePath.setFont(new Font("Verdana", Font.PLAIN, 12));
 		txtFilePath.setColumns(10);
-		
-		final JTextArea textArea_log = new JTextArea();
-		textArea_log.setWrapStyleWord(true);
 		
 		JLabel lblLog = new JLabel("Log:");
 		lblLog.setFont(new Font("Verdana", Font.PLAIN, 12));
@@ -104,40 +106,49 @@ public class MainWindow extends JFrame {
 						temp += "\n";
 					}
 				}
-				textArea_log.setText(temp);
+				if (textArea_log.getText().isEmpty() || textArea_log.getText() == null || textArea_log.getText() == "\n") {
+					textArea_log.setText(temp);
+				} else {
+					textArea_log.setText(textArea_log.getText() + "\n" + temp);
+				}
 			}
 		});
 		btnRunRecognition.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
-		JScrollPane scrollPane = new JScrollPane(textArea_log);
+		JScrollPane scrollPane_log = new JScrollPane();
 		
 		JLabel lblRecognizedOpitzCode = new JLabel("Recognized Opitz Code:");
 		lblRecognizedOpitzCode.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		txtRecCode = new JTextField();
 		txtRecCode.setColumns(10);
+		
+		JScrollPane scrollPane_matches = new JScrollPane();
+		
+		JLabel lblMatches = new JLabel("Possible Matches:");
+		lblMatches.setFont(new Font("Verdana", Font.PLAIN, 12));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(btnChooseFile)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(txtFilePath, GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnRunRecognition))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(6)
-					.addComponent(lblLog)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(btnChooseFile)
+							.addGap(2)
+							.addComponent(txtFilePath, GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnRunRecognition))
+						.addComponent(lblLog)
+						.addComponent(scrollPane_log, GroupLayout.PREFERRED_SIZE, 783, GroupLayout.PREFERRED_SIZE)
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblRecognizedOpitzCode)
+								.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED, 207, Short.MAX_VALUE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblMatches)
+								.addComponent(scrollPane_matches, GroupLayout.PREFERRED_SIZE, 356, GroupLayout.PREFERRED_SIZE))))
 					.addContainerGap())
-				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 784, Short.MAX_VALUE)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblRecognizedOpitzCode)
-					.addContainerGap(728, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(554, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -147,20 +158,29 @@ public class MainWindow extends JFrame {
 						.addComponent(btnChooseFile)
 						.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnRunRecognition))
-					.addGap(29)
-					.addComponent(lblRecognizedOpitzCode)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 234, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED, 245, Short.MAX_VALUE)
+							.addComponent(lblRecognizedOpitzCode)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(16)
+							.addComponent(lblMatches)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(scrollPane_matches, GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)))
+					.addGap(18)
 					.addComponent(lblLog)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE))
+					.addComponent(scrollPane_log, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE))
 		);
 		
+		JList list = new JList();
+		list.setFont(new Font("Verdana", Font.PLAIN, 12));
+		scrollPane_matches.setViewportView(list);
 		
-		scrollPane.setColumnHeaderView(textArea_log);
-		textArea_log.setRows(10);
-		textArea_log.setColumns(50);
+		textArea_log = new JTextArea();
+		scrollPane_log.setViewportView(textArea_log);
 		textArea_log.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		contentPane.setLayout(gl_contentPane);
