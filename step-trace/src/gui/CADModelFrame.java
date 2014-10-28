@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.awt.Window.Type;
 import javax.swing.SwingConstants;
 
+import recognition.Recognizer;
+
 public class CADModelFrame extends JFrame {
 
 	private JPanel contentPane;
@@ -46,6 +48,7 @@ public class CADModelFrame extends JFrame {
 	private JTextField txtFilePath;
 	private JTextArea txtAreaPartDescription;
 	
+	private Recognizer recog;
 	private CADModel cadModel;
 
 	/**
@@ -68,8 +71,10 @@ public class CADModelFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public CADModelFrame(boolean editable, String identifier) {
+		this.recog = new Recognizer();
+		
 		setAlwaysOnTop(true);
-		setType(Type.POPUP);
+		setType(Type.NORMAL);
 		setTitle("Part - ");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -131,6 +136,8 @@ public class CADModelFrame extends JFrame {
 	            } else {
 	            	txtFilePath.setText("An error has occured.");
 	            }
+	            recog.mainProcedure(txtFilePath.getText(), false);
+	            txtCode.setText(recog.getCode());
 			}
 		});
 		btnBrowsePartFile.setFont(new Font("Verdana", Font.PLAIN, 12));

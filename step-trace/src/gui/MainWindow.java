@@ -85,6 +85,7 @@ public class MainWindow extends JFrame {
 		mntmAddModel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CADModelFrame modelAdd = new CADModelFrame(true, null);
+				modelAdd.pack();
 				modelAdd.setVisible(true);
 			}
 		});
