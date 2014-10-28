@@ -30,6 +30,10 @@ import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.ImageIcon;
 
 public class MainWindow extends JFrame {
 
@@ -64,6 +68,28 @@ public class MainWindow extends JFrame {
 		setFont(new Font("Verdana", Font.PLAIN, 12));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnFile = new JMenu("File");
+		mnFile.setFont(new Font("Verdana", Font.PLAIN, 12));
+		menuBar.add(mnFile);
+		
+		JMenu mnModels = new JMenu("Models");
+		mnModels.setFont(new Font("Verdana", Font.PLAIN, 12));
+		menuBar.add(mnModels);
+		
+		JMenuItem mntmAddModel = new JMenuItem("Add Model");
+		mntmAddModel.setFont(new Font("Verdana", Font.PLAIN, 12));
+		mntmAddModel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CADModelFrame modelAdd = new CADModelFrame(true, null);
+				modelAdd.setVisible(true);
+			}
+		});
+		mntmAddModel.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/insert_20.png")));
+		mnModels.add(mntmAddModel);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
