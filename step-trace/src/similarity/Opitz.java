@@ -1,6 +1,6 @@
-package recognition;
+package similarity;
 
-public class Opitz {
+public class Opitz implements GTCode {
 	
 	private String src;
 	private Integer[] code;
@@ -29,10 +29,22 @@ public class Opitz {
 	 */
 	private Integer[] transformString(String src) {
 		Integer[] result = new Integer[13];
-		for (int i = 0; i < this.src.length(); i++){
-			result[i] = Integer.parseInt(String.valueOf(this.src.charAt(i)));
+		for (int i = 0; i < 13; i++){
+			if (i > src.length() - 1) {
+				result[i] = new Integer(0);
+			} else {
+				result[i] = Integer.parseInt(String.valueOf(this.src.charAt(i)));
+			}
 		}
 		return result;
+	}
+	
+	/**
+	 * Gets the GT code as an Integer array.
+	 * @return Integer[] that contains the representation of the code in numbers.
+	 */
+	public Integer[] getCode() {
+		return this.code;
 	}
 
 }

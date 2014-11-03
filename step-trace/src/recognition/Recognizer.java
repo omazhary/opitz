@@ -46,7 +46,7 @@ public class Recognizer {
     	this.clearAll();
         this.isTest = isTest;
         print("**** Start: " + filePath);
-        int firstDigit = -1, secondDigit = -1, thirdDigit = -1, fourthDigit = -1, fifthDigit = -1;
+        int firstDigit = -1, secondDigit = -1, thirdDigit = -1, fourthDigit = -1, fifthDigit = -1, sixthDigit = -1, seventhDigit = -1, eighthDigit = -1, ninthDigit = -1;
         StepFileReader sfr = new StepFileReader(filePath == null ? (CommonUtils._PATH_PRODUCTION + "50.03220-01/03220-01.stp") : filePath);
         cs = new ClosedShell(sfr.getClosedShellLineId());
         m = CartesianPointKeeper.getMaxShapeMeasures();
@@ -182,8 +182,12 @@ public class Recognizer {
         }
 
         fifthDigit = getFifthDigit(firstDigit);
+        sixthDigit = getSixthDigit();
+        seventhDigit = getSeventhDigit();
+        eighthDigit = getEighthDigit();
+        ninthDigit = getNinthDigit();
 
-        String res = "" + firstDigit + secondDigit + thirdDigit + fourthDigit + fifthDigit;
+        String res = "" + firstDigit + secondDigit + thirdDigit + fourthDigit + fifthDigit + sixthDigit + seventhDigit + eighthDigit + ninthDigit;
         print("**** Done: " + res);
         this.code = res;
         return res;
@@ -492,6 +496,38 @@ public class Recognizer {
             }
         }
         return result;
+    }
+    
+    /**
+     * Gets the model's corresponding sixth digit according to the Opitz code.
+     * @return An integer containing the sixth digit corresponding to the model.
+     */
+    private int getSixthDigit() {
+    	return 0;
+    }
+    
+    /**
+     * Gets the model's corresponding seventh digit according to the Opitz code.
+     * @return An integer containing the seventh digit corresponding to the model.
+     */
+    private int getSeventhDigit() {
+    	return 0;
+    }
+    
+    /**
+     * Gets the model's corresponding eighth digit according to the Opitz code.
+     * @return An integer containing the eighth digit corresponding to the model.
+     */
+    private int getEighthDigit() {
+    	return 0;
+    }
+    
+    /**
+     * Gets the model's corresponding ninth digit according to the Opitz code.
+     * @return An integer containing the ninth digit corresponding to the model.
+     */
+    private int getNinthDigit() {
+    	return 0;
     }
 
     /**

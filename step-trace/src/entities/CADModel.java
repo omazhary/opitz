@@ -26,6 +26,7 @@ public class CADModel {
 	private String imagePath;
 	private String description;
 	private String path;
+	private double similarity;
 
 	/**
 	 * Returns an instance of the CADModel class populated with the identifier's
@@ -36,9 +37,10 @@ public class CADModel {
 	 */
 	public CADModel(String identifier) {
 		this.identifier = identifier;
-		if (this.fetchModelData()) {
-			System.out.println("Fetch succeeded!!");
+		if (!this.fetchModelData()) {
+			System.err.println("Error: Fetch unsuccessful for id: " + identifier);
 		}
+		this.similarity = 0;
 	}
 
 	/**
@@ -64,6 +66,7 @@ public class CADModel {
 		this.imagePath = imagePath;
 		this.description = description;
 		this.path = path;
+		this.similarity = 0;
 	}
 
 	/**
@@ -72,21 +75,27 @@ public class CADModel {
 	 * @return TRUE if the fetch was successful, FALSE otherwise.
 	 */
 	private boolean fetchModelData() {
-
-		File model_list = new File(this.getModelsFilePath());
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = null;
+		boolean result = false;
 		try {
-			db = dbf.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			System.err
-					.println("Error: Unable to get DocumentBuilder instance.");
-			return false;
-		}
-		Document doc = null;
-		try {
-			doc = db.parse(model_list);
-		} catch (SAXException e) {
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(this.getModelsFilePath());
+			org.jdom2.Document doc = (org.jdom2.Document) builder
+					.build(xmlFile);
+			Element rootNode = doc.getRootElement();
+			Iterator model = rootNode.getChildren().iterator();
+			while (model.hasNext()) {
+				Element child = (Element) model.next();
+				if (child.getChildText("identifier").equalsIgnoreCase(this.identifier)) {
+					this.name = child.getChildText("part_name");
+					this.gtCode = child.getChildText("part_gt_code");
+					this.imagePath = child.getChildText("part_image_path");
+					this.description = child.getChildText("part_description");
+					this.path = child.getChildText("part_file_path");
+					result = true;
+					break;
+				}
+			}
+		} catch (JDOMException e) {
 			System.err.println("Error: Unable to parse XML file.");
 			System.err.println(e.getMessage());
 			return false;
@@ -95,14 +104,13 @@ public class CADModel {
 			System.err.println(e.getMessage());
 			return false;
 		}
-
-		doc.getDocumentElement().normalize();
-		System.out.println("Root Element: "
-				+ doc.getDocumentElement().getNodeName());
-
-		return true;
+		return result;
 	}
 
+	/**
+	 * Writes a model to the native XML file.
+	 * @return TRUE if the write was successful, FALSE otherwise.
+	 */
 	public boolean writeModelData() {
 		try {
 			SAXBuilder builder = new SAXBuilder();
@@ -249,6 +257,43 @@ public class CADModel {
 			max = max + 1;
 			return max.toString();
 		}
+	}
+	
+	/**
+	 * Gets the table model representation of this object for the model table.
+	 * @return A String[] object containing the model's name and description.
+	 */
+	public String[] toModelListData() {
+		return new String[] {this.name, this.description};
+	}
+	
+	/**
+	 * Gets the table model representation of this object for the similarity table.
+	 * @return A String[] object containing the model's name and similarity.
+	 */
+	public String[] toSimListData() {
+		return new String[] {this.name, Double.toString(this.similarity)};
+	}
+	
+	@Override
+	public String toString() {
+		return this.identifier + ":\t" + this.name;
+	}
+	
+	/**
+	 * Gets the similarity of this model to some other model.
+	 * @return A double containing the similarity of this model to another model.
+	 */
+	public double getSimilarity() {
+		return this.similarity;
+	}
+	
+	/**
+	 * Sets the similarity of this model to another model.
+	 * @param similarity The similarity of this model to some other model.
+	 */
+	public void setSimilarity(double similarity) {
+		this.similarity = Math.round(similarity * 100);
 	}
 
 	/**

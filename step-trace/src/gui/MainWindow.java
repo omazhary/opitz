@@ -19,6 +19,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ScrollPaneConstants;
 
 import recognition.Recognizer;
+import similarity.Opitz;
+import similarity.SimilarityCalculator;
 import sun.awt.VerticalBagLayout;
 import utils.CommonUtils;
 
@@ -34,6 +36,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.ImageIcon;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JSlider;
+
+import entities.CADModel;
+import entities.CADModelList;
 
 public class MainWindow extends JFrame {
 
@@ -42,6 +50,8 @@ public class MainWindow extends JFrame {
 	private Recognizer recog;
 	private JTextField txtRecCode;
 	private JTextArea textArea_log;
+	private JTable tableSimModels;
+	private JSlider sliderSimThreshold;
 
 	/**
 	 * Launch the application.
@@ -91,6 +101,32 @@ public class MainWindow extends JFrame {
 		});
 		mntmAddModel.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/insert_20.png")));
 		mnModels.add(mntmAddModel);
+		
+		JMenuItem mntmViewAvailableModels = new JMenuItem("View Available Models");
+		mntmViewAvailableModels.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CADModelListFrame model_list = new CADModelListFrame();
+				model_list.setVisible(true);
+			}
+		});
+		mntmViewAvailableModels.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/view_20.png")));
+		mntmViewAvailableModels.setFont(new Font("Verdana", Font.PLAIN, 12));
+		mnModels.add(mntmViewAvailableModels);
+		
+		JMenu mnTools = new JMenu("Tools");
+		mnTools.setFont(new Font("Verdana", Font.PLAIN, 12));
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmAdvancedOptions = new JMenuItem("Advanced Options");
+		mntmAdvancedOptions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SettingsFrame settings = new SettingsFrame();
+				settings.setVisible(true);
+			}
+		});
+		mntmAdvancedOptions.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/settings_20.png")));
+		mntmAdvancedOptions.setFont(new Font("Verdana", Font.PLAIN, 12));
+		mnTools.add(mntmAdvancedOptions);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -144,7 +180,7 @@ public class MainWindow extends JFrame {
 		
 		JScrollPane scrollPane_log = new JScrollPane();
 		
-		JLabel lblRecognizedOpitzCode = new JLabel("Recognized Opitz Code:");
+		JLabel lblRecognizedOpitzCode = new JLabel("Recognized Group Technology Code:");
 		lblRecognizedOpitzCode.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		txtRecCode = new JTextField();
@@ -154,62 +190,132 @@ public class MainWindow extends JFrame {
 		
 		JLabel lblMatches = new JLabel("Possible Matches:");
 		lblMatches.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblSimilarityThreshold = new JLabel("Set Similarity Threshold:");
+		lblSimilarityThreshold.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		sliderSimThreshold = new JSlider();
+		sliderSimThreshold.setPaintTicks(true);
+		sliderSimThreshold.setPaintLabels(true);
+		sliderSimThreshold.setMinorTickSpacing(10);
+		sliderSimThreshold.setMajorTickSpacing(20);
+		sliderSimThreshold.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JButton btnSearchForSimilar = new JButton("Search for Similar Models");
+		btnSearchForSimilar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CADModelList model_list = new CADModelList();
+				SimilarityCalculator calc = new SimilarityCalculator();
+				double threshold = Double.parseDouble(Integer.toString(sliderSimThreshold.getValue()));
+				printToLog("Running similarity comparisons at " + sliderSimThreshold.getValue() + "% minimum.");
+				CADModel[] simModels = calc.getSimilarModelsViaOpitz(new Opitz(txtRecCode.getText()), model_list, (threshold / 100));
+				printToLog("Similarity comparisons complete. " + simModels.length + " models found.");
+				DefaultTableModel tempTableModel = new DefaultTableModel(new Object[][] {}, new String[] {"Part Name", "Part Similarity %"}) {
+					@Override
+					public boolean isCellEditable(int row, int column) {
+						return false;
+					}
+				};
+				for (int i = 0; i < simModels.length; i++) {
+					tempTableModel.addRow(simModels[i].toSimListData());
+					printToLog(simModels[i].getPartName() + " - " + simModels[i].getSimilarity());
+				}
+				tableSimModels.setModel(tempTableModel);
+				printToLog("Models retrieved.");
+			}
+		});
+		btnSearchForSimilar.setFont(new Font("Verdana", Font.PLAIN, 12));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane_log, GroupLayout.DEFAULT_SIZE, 766, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(btnChooseFile)
-							.addGap(2)
-							.addComponent(txtFilePath, GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnRunRecognition))
-						.addComponent(lblLog)
-						.addComponent(scrollPane_log, GroupLayout.PREFERRED_SIZE, 783, GroupLayout.PREFERRED_SIZE)
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnRunRecognition)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, 214, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnChooseFile))
+								.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblRecognizedOpitzCode)
-								.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED, 207, Short.MAX_VALUE)
+								.addComponent(lblSimilarityThreshold)
+								.addComponent(sliderSimThreshold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnSearchForSimilar)
+								.addComponent(lblLog))
+							.addPreferredGap(ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblMatches)
 								.addComponent(scrollPane_matches, GroupLayout.PREFERRED_SIZE, 356, GroupLayout.PREFERRED_SIZE))))
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(52)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnChooseFile)
-						.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnRunRecognition))
+					.addContainerGap(12, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED, 245, Short.MAX_VALUE)
-							.addComponent(lblRecognizedOpitzCode)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(lblMatches)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(scrollPane_matches, GroupLayout.PREFERRED_SIZE, 347, GroupLayout.PREFERRED_SIZE))
+								.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+									.addGap(46)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+										.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(btnChooseFile))
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(btnRunRecognition)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(lblRecognizedOpitzCode)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(lblSimilarityThreshold)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(sliderSimThreshold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(btnSearchForSimilar)))
 							.addGap(16)
-							.addComponent(lblMatches)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(scrollPane_matches, GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)))
-					.addGap(18)
-					.addComponent(lblLog)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane_log, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE))
+							.addComponent(scrollPane_log, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addComponent(lblLog)
+							.addGap(176))))
 		);
-		
-		JList list = new JList();
-		list.setFont(new Font("Verdana", Font.PLAIN, 12));
-		scrollPane_matches.setViewportView(list);
 		
 		textArea_log = new JTextArea();
 		scrollPane_log.setViewportView(textArea_log);
 		textArea_log.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
+		tableSimModels = new JTable();
+		tableSimModels.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Part Name", "Part Similarity %"
+			}
+		));
+		tableSimModels.setFont(new Font("Verdana", Font.PLAIN, 12));
+		scrollPane_matches.setViewportView(tableSimModels);
+		
 		contentPane.setLayout(gl_contentPane);
+	}
+	
+	/**
+	 * Prints a line of text to the log text area.
+	 * @param log_data The line of text to be printed in the log text area.
+	 */
+	private void printToLog(String log_data) {
+		String temp = this.textArea_log.getText();
+		if (temp != null && !temp.isEmpty()) {
+			temp += "\n";
+		}
+		temp += log_data;
+		this.textArea_log.setText(temp);
 	}
 }
