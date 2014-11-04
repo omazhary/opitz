@@ -42,6 +42,7 @@ public class CADModelListFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public CADModelListFrame() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 640, 480);
 		contentPane = new JPanel();

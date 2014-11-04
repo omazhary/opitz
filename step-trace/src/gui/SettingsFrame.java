@@ -35,6 +35,7 @@ public class SettingsFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public SettingsFrame() {
+		setResizable(false);
 		setTitle("Advanced Settings");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 640, 480);
@@ -48,9 +49,12 @@ public class SettingsFrame extends JFrame {
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 		
+		JPanel panel = new JPanel();
+		tabbedPane.addTab("Recognition", null, panel, null);
+		
 		JPanel panelSim = new JPanel();
 		tabbedPane.addTab("Similarity", null, panelSim, null);
-		tabbedPane.setEnabledAt(0, true);
+		tabbedPane.setEnabledAt(1, true);
 		GroupLayout gl_panelSim = new GroupLayout(panelSim);
 		gl_panelSim.setHorizontalGroup(
 			gl_panelSim.createParallelGroup(Alignment.LEADING)
@@ -62,5 +66,4 @@ public class SettingsFrame extends JFrame {
 		);
 		panelSim.setLayout(gl_panelSim);
 	}
-
 }
