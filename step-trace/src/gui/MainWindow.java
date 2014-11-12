@@ -23,6 +23,7 @@ import similarity.Opitz;
 import similarity.SimilarityCalculator;
 import sun.awt.VerticalBagLayout;
 import utils.CommonUtils;
+import utils.Preferences;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -52,6 +53,7 @@ public class MainWindow extends JFrame {
 	private JTextArea textArea_log;
 	private JTable tableSimModels;
 	private JSlider sliderSimThreshold;
+	private Preferences pref;
 
 	/**
 	 * Launch the application.
@@ -78,6 +80,7 @@ public class MainWindow extends JFrame {
 		setFont(new Font("Verdana", Font.PLAIN, 12));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
+		this.pref = new Preferences();
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -120,7 +123,7 @@ public class MainWindow extends JFrame {
 		JMenuItem mntmAdvancedOptions = new JMenuItem("Advanced Options");
 		mntmAdvancedOptions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SettingsFrame settings = new SettingsFrame();
+				SettingsFrame settings = new SettingsFrame(pref);
 				settings.setVisible(true);
 			}
 		});
@@ -208,7 +211,8 @@ public class MainWindow extends JFrame {
 				SimilarityCalculator calc = new SimilarityCalculator();
 				double threshold = Double.parseDouble(Integer.toString(sliderSimThreshold.getValue()));
 				printToLog("Running similarity comparisons at " + sliderSimThreshold.getValue() + "% minimum.");
-				CADModel[] simModels = calc.getSimilarModelsViaOpitz(new Opitz(txtRecCode.getText()), model_list, (threshold / 100));
+				printToLog("Weights set at: " + pref.getWeightVectorString());
+				CADModel[] simModels = calc.getSimilarModelsViaOpitz(new Opitz(txtRecCode.getText()), model_list, (threshold / 100), pref.getWeightVector());
 				printToLog("Similarity comparisons complete. " + simModels.length + " models found.");
 				DefaultTableModel tempTableModel = new DefaultTableModel(new Object[][] {}, new String[] {"Part Name", "Part Similarity %"}) {
 					@Override
@@ -231,7 +235,7 @@ public class MainWindow extends JFrame {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane_log, GroupLayout.DEFAULT_SIZE, 766, Short.MAX_VALUE)
+						.addComponent(scrollPane_log, GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(btnRunRecognition)
@@ -254,16 +258,15 @@ public class MainWindow extends JFrame {
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(12, Short.MAX_VALUE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_contentPane.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(lblMatches)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(scrollPane_matches, GroupLayout.PREFERRED_SIZE, 347, GroupLayout.PREFERRED_SIZE))
-								.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+								.addGroup(gl_contentPane.createSequentialGroup()
 									.addGap(46)
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 										.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -280,12 +283,13 @@ public class MainWindow extends JFrame {
 									.addComponent(sliderSimThreshold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addComponent(btnSearchForSimilar)))
-							.addGap(16)
-							.addComponent(scrollPane_log, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap())
+							.addGap(16))
 						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
 							.addComponent(lblLog)
-							.addGap(176))))
+							.addGap(7)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane_log, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
+					.addGap(30))
 		);
 		
 		textArea_log = new JTextArea();

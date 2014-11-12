@@ -293,7 +293,7 @@ public class CADModel {
 	 * @param similarity The similarity of this model to some other model.
 	 */
 	public void setSimilarity(double similarity) {
-		this.similarity = Math.round(similarity * 100);
+		this.similarity = similarity * 100;//Math.round(similarity * 100);
 	}
 
 	/**

@@ -25,13 +25,16 @@ public class SimilarityCalculator {
 	 * @param threshold The minimum similarity value to be achieved in order for two models to be similar.
 	 * @return A CADModel[] containing all similar models.
 	 */
-	public CADModel[] getSimilarModelsViaOpitz(GTCode code, CADModelList model_list, double threshold) {
+	public CADModel[] getSimilarModelsViaOpitz(GTCode code, CADModelList model_list, double threshold, Integer[] weights) {
 		ArrayList<CADModel> result1 = new ArrayList<CADModel> ();
 		
 		for (int i = 0; i < model_list.getModelListSize(); i++){
 			CADModel temp = model_list.getModel(i);
 			Opitz tempCode = new Opitz(temp.getPartGTCode());
-			double tempSim = this.calculator.getSimilarity(code.getCode(), tempCode.getCode());
+			double tempSim = this.calculator.getSimilarity(this.applyWeights(code.getCode(), weights), this.applyWeights(tempCode.getCode(), weights));
+			for(int j = 0; j < this.applyWeights(code.getCode(), weights).length; j++) {
+				System.out.println(this.applyWeights(code.getCode(), weights)[j] + " ? " + this.applyWeights(tempCode.getCode(), weights)[j]);
+			}
 			if (tempSim >= threshold) {
 				temp.setSimilarity(tempSim);
 				result1.add(temp);
@@ -44,6 +47,20 @@ public class SimilarityCalculator {
 		}
 		
 		return result2;
+	}
+	
+	/**
+	 * Applies the weights to the given code by multiplying the code digit by 10^weight.
+	 * @param code The code to which the weight should be applied.
+	 * @param weights The weights that will be applied.
+	 * @return An Integer[] containing the weighted values of the code.
+	 */
+	private Double[] applyWeights(Integer[] code, Integer[] weights) {
+		Double[] result = new Double[weights.length];
+		for (int i = 0; i < weights.length; i++) {
+			result[i] = new Double(Double.parseDouble(code[i].toString()) * Math.pow(10, Double.parseDouble(weights[i].toString())));
+		}
+		return result;
 	}
 	
 }

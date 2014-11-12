@@ -47,6 +47,7 @@ public class CADModelFrame extends JFrame {
 	private JLabel lblImage;
 	private JTextField txtFilePath;
 	private JTextArea txtAreaPartDescription;
+	private JLabel lblStatus;
 	
 	private Recognizer recog;
 	private CADModel cadModel;
@@ -141,11 +142,14 @@ public class CADModelFrame extends JFrame {
 			}
 		});
 		btnBrowsePartFile.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		lblStatus = new JLabel("Ready...");
+		lblStatus.setFont(new Font("Verdana", Font.PLAIN, 12));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(toolBar, GroupLayout.DEFAULT_SIZE, 711, Short.MAX_VALUE)
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addComponent(toolBar, GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
+				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
@@ -176,6 +180,10 @@ public class CADModelFrame extends JFrame {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 261, GroupLayout.PREFERRED_SIZE)))
 					.addGap(8))
+				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblStatus, GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -186,7 +194,7 @@ public class CADModelFrame extends JFrame {
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblIdentifier, GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE)
+								.addComponent(lblIdentifier, GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(lblPartIdentifier)
 									.addGap(11)
@@ -208,15 +216,20 @@ public class CADModelFrame extends JFrame {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 265, GroupLayout.PREFERRED_SIZE)))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-					.addContainerGap())
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE)
+					.addGap(8)
+					.addComponent(lblStatus))
 		);
 		
 		JButton btnAdd = new JButton("Add");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cadModel = new CADModel(txtPartName.getText(), txtCode.getText(), txtImagePath.getText(), txtAreaPartDescription.getText(), txtFilePath.getText());
-				cadModel.writeModelData();
+				if (cadModel.writeModelData()) {
+					lblStatus.setText("Model saved successfully.");
+				} else {
+					lblStatus.setText("Model was not saved!!");
+				}
 			}
 		});
 		btnAdd.setFont(new Font("Verdana", Font.PLAIN, 12));
