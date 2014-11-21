@@ -151,6 +151,12 @@ public class MainWindow extends JFrame {
 		mnRecognition.add(mntmLoadStepFile);
 		
 		JMenuItem mntmRecogWizard = new JMenuItem("Use Recognition Wizard");
+		mntmRecogWizard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				OpitzCodeWizardFrame wizard = new OpitzCodeWizardFrame();
+				wizard.setVisible(true);
+			}
+		});
 		mntmRecogWizard.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/wizard_20.png")));
 		mntmRecogWizard.setFont(new Font("Verdana", Font.PLAIN, 12));
 		mnRecognition.add(mntmRecogWizard);
