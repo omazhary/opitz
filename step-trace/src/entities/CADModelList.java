@@ -2,6 +2,9 @@ package entities;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
 
 import org.jdom2.Element;
@@ -78,6 +81,38 @@ public class CADModelList {
 	 */
 	public int getModelListSize() {
 		return this.models.length;
+	}
+	
+	/**
+	 * Exports the model list to the specified directory.
+	 * @param newPath The new directory to which the model list should be exported.
+	 * @return TRUE if successful, FALSE otherwise.
+	 */
+	public boolean exportModelList(String newPath) {
+		try {
+			Files.copy(new File(this.getModelsFilePath()).toPath(), new File(newPath).toPath(), StandardCopyOption.REPLACE_EXISTING);
+			return true;
+		} catch (IOException e) {
+			System.err.println("Error: Unable to copy to target directory.");
+			System.err.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	/**
+	 * Imports the model list from the specified directory.
+	 * @param newPath The directory from which the model list should be imported.
+	 * @return TRUE if successful, FALSE otherwise.
+	 */
+	public boolean importModelList(String newPath) {
+		try {
+			Files.copy(new File(newPath).toPath(), new File(this.getModelsFilePath()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+			return true;
+		} catch (IOException e) {
+			System.err.println("Error: Unable to copy to target directory.");
+			System.err.println(e.getMessage());
+			return false;
+		}
 	}
 	
 }

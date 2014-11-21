@@ -31,10 +31,7 @@ public class SimilarityCalculator {
 		for (int i = 0; i < model_list.getModelListSize(); i++){
 			CADModel temp = model_list.getModel(i);
 			Opitz tempCode = new Opitz(temp.getPartGTCode());
-			double tempSim = this.calculator.getSimilarity(this.applyWeights(code.getCode(), weights), this.applyWeights(tempCode.getCode(), weights));
-			for(int j = 0; j < this.applyWeights(code.getCode(), weights).length; j++) {
-				System.out.println(this.applyWeights(code.getCode(), weights)[j] + " ? " + this.applyWeights(tempCode.getCode(), weights)[j]);
-			}
+			double tempSim = this.calculator.getSimilarity(this.applyWeights(code.getCode(), weights), this.applyWeights(tempCode.getCode(), weights)); 
 			if (tempSim >= threshold) {
 				temp.setSimilarity(tempSim);
 				result1.add(temp);
@@ -58,7 +55,7 @@ public class SimilarityCalculator {
 	private Double[] applyWeights(Integer[] code, Integer[] weights) {
 		Double[] result = new Double[weights.length];
 		for (int i = 0; i < weights.length; i++) {
-			result[i] = new Double(Double.parseDouble(code[i].toString()) * Math.pow(10, Double.parseDouble(weights[i].toString())));
+			result[i] = new Double(Double.parseDouble(code[i].toString()) * Double.parseDouble(weights[i].toString()));//Math.pow(10, Double.parseDouble(weights[i].toString())));
 		}
 		return result;
 	}

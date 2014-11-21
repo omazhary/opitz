@@ -70,6 +70,7 @@ public class SettingsFrame extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setFont(new Font("Verdana", Font.PLAIN, 12));
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		tabbedPane.setBounds(110, 110, 635, 400);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel panelRec = new JPanel();
@@ -83,96 +84,96 @@ public class SettingsFrame extends JFrame {
 		lblWeightVector.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		sliderD9 = new JSlider();
-		sliderD9.setMaximum(10);
+		sliderD9.setMinimum(1);
+		sliderD9.setMaximum(5);
 		sliderD9.setFont(new Font("Verdana", Font.PLAIN, 12));
 		sliderD9.setPaintTicks(true);
 		sliderD9.setPaintLabels(true);
-		sliderD9.setMajorTickSpacing(2);
-		sliderD9.setMinorTickSpacing(1);
+		sliderD9.setMajorTickSpacing(1);
 		sliderD9.setValue(0);
 		sliderD9.setOrientation(SwingConstants.VERTICAL);
 		
 		sliderD8 = new JSlider();
-		sliderD8.setMaximum(10);
+		sliderD8.setMinimum(1);
+		sliderD8.setMaximum(5);
 		sliderD8.setFont(new Font("Verdana", Font.PLAIN, 12));
 		sliderD8.setPaintLabels(true);
 		sliderD8.setPaintTicks(true);
-		sliderD8.setMajorTickSpacing(2);
-		sliderD8.setMinorTickSpacing(1);
+		sliderD8.setMajorTickSpacing(1);
 		sliderD8.setValue(0);
 		sliderD8.setOrientation(SwingConstants.VERTICAL);
 		
 		sliderD7 = new JSlider();
-		sliderD7.setMaximum(10);
+		sliderD7.setMinimum(1);
+		sliderD7.setMaximum(5);
 		sliderD7.setOrientation(SwingConstants.VERTICAL);
 		sliderD7.setValue(0);
 		sliderD7.setPaintTicks(true);
 		sliderD7.setPaintLabels(true);
-		sliderD7.setMinorTickSpacing(1);
-		sliderD7.setMajorTickSpacing(2);
+		sliderD7.setMajorTickSpacing(1);
 		sliderD7.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		sliderD6 = new JSlider();
-		sliderD6.setMaximum(10);
+		sliderD6.setMinimum(1);
+		sliderD6.setMaximum(5);
 		sliderD6.setValue(0);
 		sliderD6.setPaintTicks(true);
 		sliderD6.setPaintLabels(true);
 		sliderD6.setOrientation(SwingConstants.VERTICAL);
-		sliderD6.setMinorTickSpacing(1);
-		sliderD6.setMajorTickSpacing(2);
+		sliderD6.setMajorTickSpacing(1);
 		sliderD6.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		JLabel lblAuxillaryDigitsWeights = new JLabel("Auxillary Digit Weights");
 		lblAuxillaryDigitsWeights.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		sliderD1 = new JSlider();
-		sliderD1.setMaximum(10);
+		sliderD1.setMinimum(1);
+		sliderD1.setMaximum(5);
 		sliderD1.setValue(0);
 		sliderD1.setPaintTicks(true);
 		sliderD1.setPaintLabels(true);
 		sliderD1.setOrientation(SwingConstants.VERTICAL);
-		sliderD1.setMinorTickSpacing(1);
-		sliderD1.setMajorTickSpacing(2);
+		sliderD1.setMajorTickSpacing(1);
 		sliderD1.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		sliderD2 = new JSlider();
-		sliderD2.setMaximum(10);
+		sliderD2.setMinimum(1);
+		sliderD2.setMaximum(5);
 		sliderD2.setValue(0);
 		sliderD2.setPaintTicks(true);
 		sliderD2.setPaintLabels(true);
 		sliderD2.setOrientation(SwingConstants.VERTICAL);
-		sliderD2.setMinorTickSpacing(1);
 		sliderD2.setFont(new Font("Verdana", Font.PLAIN, 12));
-		sliderD2.setMajorTickSpacing(2);
+		sliderD2.setMajorTickSpacing(1);
 		
 		sliderD3 = new JSlider();
+		sliderD3.setMinimum(1);
 		sliderD3.setValue(0);
 		sliderD3.setPaintTicks(true);
 		sliderD3.setPaintLabels(true);
 		sliderD3.setOrientation(SwingConstants.VERTICAL);
-		sliderD3.setMinorTickSpacing(1);
-		sliderD3.setMaximum(10);
-		sliderD3.setMajorTickSpacing(2);
+		sliderD3.setMaximum(5);
+		sliderD3.setMajorTickSpacing(1);
 		sliderD3.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		sliderD4 = new JSlider();
+		sliderD4.setMinimum(1);
 		sliderD4.setValue(0);
 		sliderD4.setPaintTicks(true);
 		sliderD4.setPaintLabels(true);
 		sliderD4.setOrientation(SwingConstants.VERTICAL);
-		sliderD4.setMinorTickSpacing(1);
-		sliderD4.setMaximum(10);
-		sliderD4.setMajorTickSpacing(2);
+		sliderD4.setMaximum(5);
+		sliderD4.setMajorTickSpacing(1);
 		sliderD4.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		sliderD5 = new JSlider();
+		sliderD5.setMinimum(1);
 		sliderD5.setValue(0);
 		sliderD5.setPaintTicks(true);
 		sliderD5.setPaintLabels(true);
 		sliderD5.setOrientation(SwingConstants.VERTICAL);
-		sliderD5.setMinorTickSpacing(1);
-		sliderD5.setMaximum(10);
-		sliderD5.setMajorTickSpacing(2);
+		sliderD5.setMaximum(5);
+		sliderD5.setMajorTickSpacing(1);
 		sliderD5.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		JLabel lblFormDigitWeights = new JLabel("Form Digit Weights");
@@ -224,7 +225,7 @@ public class SettingsFrame extends JFrame {
 		btnSave.setFont(new Font("Verdana", Font.PLAIN, 12));
 		GroupLayout gl_panelSim = new GroupLayout(panelSim);
 		gl_panelSim.setHorizontalGroup(
-			gl_panelSim.createParallelGroup(Alignment.LEADING)
+			gl_panelSim.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panelSim.createSequentialGroup()
 					.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panelSim.createSequentialGroup()
@@ -241,64 +242,64 @@ public class SettingsFrame extends JFrame {
 							.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblFormDigitWeights)
 								.addGroup(gl_panelSim.createSequentialGroup()
+									.addGap(4)
 									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 										.addComponent(sliderD2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addGroup(gl_panelSim.createSequentialGroup()
 											.addGap(10)
 											.addComponent(label)))
-									.addPreferredGap(ComponentPlacement.RELATED)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_panelSim.createSequentialGroup()
 											.addGap(10)
 											.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 8, GroupLayout.PREFERRED_SIZE))
 										.addComponent(sliderD3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.RELATED)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_panelSim.createSequentialGroup()
 											.addGap(10)
 											.addComponent(label_2))
 										.addComponent(sliderD4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+							.addGap(18)
+							.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
+								.addComponent(sliderD5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_panelSim.createSequentialGroup()
+									.addGap(10)
+									.addComponent(label_3)))
+							.addPreferredGap(ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
 							.addGroup(gl_panelSim.createParallelGroup(Alignment.TRAILING)
 								.addGroup(gl_panelSim.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED, 188, Short.MAX_VALUE)
-									.addComponent(lblAuxillaryDigitsWeights)
-									.addGap(34))
-								.addGroup(gl_panelSim.createSequentialGroup()
-									.addGap(4)
-									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
-										.addComponent(sliderD5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addGroup(gl_panelSim.createSequentialGroup()
-											.addGap(10)
-											.addComponent(label_3)))
-									.addPreferredGap(ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
 									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 										.addComponent(sliderD6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addGroup(gl_panelSim.createSequentialGroup()
 											.addGap(10)
 											.addComponent(label_4)))
-									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGap(18)
 									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 										.addComponent(sliderD7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addGroup(gl_panelSim.createSequentialGroup()
 											.addGap(10)
 											.addComponent(label_5)))
-									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGap(16)
 									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 										.addComponent(sliderD8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addGroup(gl_panelSim.createSequentialGroup()
 											.addGap(10)
 											.addComponent(label_6)))
-									.addPreferredGap(ComponentPlacement.RELATED)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_panelSim.createSequentialGroup()
 											.addGap(10)
 											.addComponent(label_7))
-										.addComponent(sliderD9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))))
-					.addContainerGap(41, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_panelSim.createSequentialGroup()
-					.addContainerGap(520, Short.MAX_VALUE)
+										.addComponent(sliderD9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addGroup(gl_panelSim.createSequentialGroup()
+									.addComponent(lblAuxillaryDigitsWeights)
+									.addGap(28)))))
+					.addContainerGap(52, Short.MAX_VALUE))
+				.addGroup(gl_panelSim.createSequentialGroup()
+					.addContainerGap(292, Short.MAX_VALUE)
 					.addComponent(btnSave)
-					.addContainerGap())
+					.addGap(268))
 		);
 		gl_panelSim.setVerticalGroup(
 			gl_panelSim.createParallelGroup(Alignment.LEADING)
@@ -309,7 +310,7 @@ public class SettingsFrame extends JFrame {
 					.addGroup(gl_panelSim.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblFormDigitWeights)
 						.addComponent(lblAuxillaryDigitsWeights))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGap(18)
 					.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panelSim.createSequentialGroup()
 							.addComponent(sliderD5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -317,28 +318,41 @@ public class SettingsFrame extends JFrame {
 							.addComponent(label_3, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panelSim.createSequentialGroup()
 							.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
-								.addComponent(sliderD1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_panelSim.createParallelGroup(Alignment.BASELINE)
-									.addComponent(sliderD2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addComponent(sliderD3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addComponent(sliderD4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addComponent(sliderD6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_panelSim.createSequentialGroup()
 									.addComponent(sliderD7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(label_5))
+								.addGroup(gl_panelSim.createSequentialGroup()
+									.addComponent(sliderD6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(label_4))
+								.addGroup(gl_panelSim.createSequentialGroup()
+									.addComponent(sliderD1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(labelD1))
+								.addGroup(gl_panelSim.createSequentialGroup()
+									.addComponent(sliderD4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(label_2))
+								.addGroup(gl_panelSim.createSequentialGroup()
+									.addComponent(sliderD3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(label_1))
+								.addGroup(gl_panelSim.createSequentialGroup()
+									.addComponent(sliderD2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(label))
+								.addGroup(gl_panelSim.createSequentialGroup()
+									.addComponent(sliderD9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(label_7))
+								.addGroup(gl_panelSim.createSequentialGroup()
 									.addComponent(sliderD8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addComponent(sliderD9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
-								.addComponent(label_7)
-								.addComponent(label_6)
-								.addComponent(label_5)
-								.addComponent(labelD1)
-								.addComponent(label)
-								.addComponent(label_1)
-								.addComponent(label_2)
-								.addComponent(label_4))))
-					.addPreferredGap(ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
-					.addComponent(btnSave)
-					.addContainerGap())
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(label_6)))
+							.addGap(30)
+							.addComponent(btnSave)))
+					.addContainerGap(92, Short.MAX_VALUE))
 		);
 		panelSim.setLayout(gl_panelSim);
 	}

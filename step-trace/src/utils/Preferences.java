@@ -5,7 +5,7 @@ public class Preferences {
 	public Integer[] weightVector;
 	
 	public Preferences() {
-		this.weightVector = new Integer[]{1,1,1,1,1,1,1,1,1};
+		this.weightVector = new Integer[]{1, 1, 1, 1, 1, 1, 1, 1, 1};
 	}
 	
 	/**

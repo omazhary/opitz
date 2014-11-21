@@ -70,7 +70,7 @@ public class CosineSimCalculator {
      */
     private double getNorm(double[] in) throws CosineSimException {
         double temp_result = this.getDotProduct(in, in);
-        return Math.sqrt(temp_result);
+        return temp_result;
     }
     
     /**
@@ -99,7 +99,10 @@ public class CosineSimCalculator {
         this.clear();
         this.prepVectors(in1, in2);
         try {
-            this.result = this.getDotProduct(this.vector1, this.vector2) / (this.getNorm(this.vector1) * this.getNorm(this.vector2));
+        	double numerator = this.getDotProduct(this.vector1, this.vector2);
+        	double deno1 = this.getNorm(this.vector1);
+        	double deno2 = this.getNorm(this.vector2);
+            this.result = numerator / (deno1 * deno2);
         } catch (CosineSimException ex) {
             Logger.getLogger(CosineSimCalculator.class.getName()).log(Level.SEVERE, null, ex);
             this.result = 0;

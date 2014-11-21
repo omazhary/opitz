@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 import javax.swing.JMenuBar;
@@ -83,11 +84,22 @@ public class MainWindow extends JFrame {
 		this.pref = new Preferences();
 		
 		JMenuBar menuBar = new JMenuBar();
+		menuBar.setFont(new Font("Verdana", Font.PLAIN, 12));
 		setJMenuBar(menuBar);
 		
 		JMenu mnFile = new JMenu("File");
 		mnFile.setFont(new Font("Verdana", Font.PLAIN, 12));
 		menuBar.add(mnFile);
+		
+		JMenuItem mntmQuit = new JMenuItem("Quit");
+		mntmQuit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(NORMAL);
+			}
+		});
+		mntmQuit.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/quit_20.png")));
+		mntmQuit.setFont(new Font("Verdana", Font.PLAIN, 12));
+		mnFile.add(mntmQuit);
 		
 		JMenu mnModels = new JMenu("Models");
 		mnModels.setFont(new Font("Verdana", Font.PLAIN, 12));
@@ -116,6 +128,33 @@ public class MainWindow extends JFrame {
 		mntmViewAvailableModels.setFont(new Font("Verdana", Font.PLAIN, 12));
 		mnModels.add(mntmViewAvailableModels);
 		
+		JMenu mnRecognition = new JMenu("Recognition");
+		mnRecognition.setFont(new Font("Verdana", Font.PLAIN, 12));
+		menuBar.add(mnRecognition);
+		
+		JMenuItem mntmLoadStepFile = new JMenuItem("Load *.stp File");
+		mntmLoadStepFile.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/open_20.png")));
+		mntmLoadStepFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser c = new JFileChooser();
+	            int rVal = c.showOpenDialog(MainWindow.this);
+	            if (rVal == JFileChooser.APPROVE_OPTION) {
+	                txtFilePath.setText(c.getSelectedFile().getAbsolutePath());
+	            } else if (rVal == JFileChooser.CANCEL_OPTION) {
+	                txtFilePath.setText("File path...");
+	            } else {
+	            	txtFilePath.setText("An error has occured.");
+	            }
+			}
+		});
+		mntmLoadStepFile.setFont(new Font("Verdana", Font.PLAIN, 12));
+		mnRecognition.add(mntmLoadStepFile);
+		
+		JMenuItem mntmRecogWizard = new JMenuItem("Use Recognition Wizard");
+		mntmRecogWizard.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/wizard_20.png")));
+		mntmRecogWizard.setFont(new Font("Verdana", Font.PLAIN, 12));
+		mnRecognition.add(mntmRecogWizard);
+		
 		JMenu mnTools = new JMenu("Tools");
 		mnTools.setFont(new Font("Verdana", Font.PLAIN, 12));
 		menuBar.add(mnTools);
@@ -127,6 +166,72 @@ public class MainWindow extends JFrame {
 				settings.setVisible(true);
 			}
 		});
+		
+		JMenu mnDtSrc = new JMenu("Data Sources");
+		mnDtSrc.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/data_20.png")));
+		mnTools.add(mnDtSrc);
+		mnDtSrc.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JMenu mnXML = new JMenu("XML Options");
+		mnXML.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/xml_20.png")));
+		mnXML.setFont(new Font("Verdana", Font.PLAIN, 12));
+		mnDtSrc.add(mnXML);
+		
+		JMenuItem mntmXMLImport = new JMenuItem("Import XML Index");
+		mntmXMLImport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser c = new JFileChooser();
+				c.setFileFilter(new FileNameExtensionFilter("XML Files", "xml"));
+				c.setFileHidingEnabled(true);
+	            int rVal = c.showOpenDialog(MainWindow.this);
+	            if (rVal == JFileChooser.APPROVE_OPTION) {
+	            	CADModelList model_list = new CADModelList();
+					if (model_list.importModelList(c.getSelectedFile().getAbsolutePath())) {
+						printToLog(c.getSelectedFile().getAbsolutePath() + " imported successfully.");
+					} else {
+						printToLog("Unable to import " + c.getSelectedFile().getAbsolutePath());
+					}
+	            } else if (rVal == JFileChooser.CANCEL_OPTION) {
+	            	printToLog("File import cancelled.");
+	            } else {
+	            	printToLog("An error has occured during import.");
+	            }
+			}
+		});
+		mntmXMLImport.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/import_20.png")));
+		mntmXMLImport.setFont(new Font("Verdana", Font.PLAIN, 12));
+		mnXML.add(mntmXMLImport);
+		
+		JMenuItem mntmXMLExport = new JMenuItem("Export XML Index");
+		mntmXMLExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser c = new JFileChooser();
+				c.setFileFilter(new FileNameExtensionFilter("XML Files", "xml"));
+				c.setFileHidingEnabled(true);
+	            int rVal = c.showOpenDialog(MainWindow.this);
+	            String path = "";
+	            if (rVal == JFileChooser.APPROVE_OPTION) {
+	            	if (!c.getSelectedFile().getAbsolutePath().endsWith(".xml")) {
+	            		path = c.getSelectedFile().getAbsolutePath() + ".xml";
+	            	} else {
+	            		path = c.getSelectedFile().getAbsolutePath();
+	            	}
+	            	CADModelList model_list = new CADModelList();
+					if (model_list.exportModelList(path)) {
+						printToLog(path + " exported successfully.");
+					} else {
+						printToLog("Unable to export " + path);
+					}
+	            } else if (rVal == JFileChooser.CANCEL_OPTION) {
+	            	printToLog("File export cancelled.");
+	            } else {
+	            	printToLog("An error has occured during export.");
+	            }
+			}
+		});
+		mntmXMLExport.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/export_20.png")));
+		mntmXMLExport.setFont(new Font("Verdana", Font.PLAIN, 12));
+		mnXML.add(mntmXMLExport);
 		mntmAdvancedOptions.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/settings_20.png")));
 		mntmAdvancedOptions.setFont(new Font("Verdana", Font.PLAIN, 12));
 		mnTools.add(mntmAdvancedOptions);
