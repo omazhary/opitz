@@ -12,35 +12,23 @@ import javax.swing.JLabel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
+
 import java.awt.Font;
+
 import javax.swing.JTextPane;
+
 import java.awt.Color;
+
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
-
-enum extShape {
-	
-	PURE_CIRCLE_OR_CYLINDER("General circle or cylinder"),
-	CIRCLE_OR_CYLINDER_WITH_DEVIATIONS("Circle or cylinder with deviations"),
-	FLAT_LONG_CUBIC("Flat, long, or cubic");
-	
-	private String value;
-	
-	extShape(String value) {
-		this.value = value;
-	}
-	
-	@Override
-	public String toString() {
-		return this.value;
-	}
-}
 
 public class OpitzCodeWizardFrame extends JFrame {
 
@@ -50,7 +38,6 @@ public class OpitzCodeWizardFrame extends JFrame {
 	private JRadioButton rdbtnQ1Yes;
 	private JRadioButton rdbtnQ1No;
 	private boolean answerQ1;
-	private String answerQ2;
 	private JTextField txtLength;
 	private JTextField txtWidth;
 	private JTextField txtHeight;
@@ -153,6 +140,11 @@ public class OpitzCodeWizardFrame extends JFrame {
 		
 		JButton btnToDigit2 = new JButton("Next >");
 		btnToDigit2.setFont(new Font("Verdana", Font.PLAIN, 12));
+		btnToDigit2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println(getFirstDigit());
+			}
+		});
 		
 		JButton btnBkDigit1 = new JButton("< Back");
 		btnBkDigit1.addActionListener(new ActionListener() {
@@ -227,7 +219,7 @@ public class OpitzCodeWizardFrame extends JFrame {
 					.addGroup(gl_panelDigit1.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panelDigit1.createSequentialGroup()
 							.addComponent(btnBkDigit1)
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addPreferredGap(ComponentPlacement.RELATED, 449, Short.MAX_VALUE)
 							.addComponent(btnToDigit2))
 						.addGroup(gl_panelDigit1.createSequentialGroup()
 							.addGap(12)
@@ -258,7 +250,7 @@ public class OpitzCodeWizardFrame extends JFrame {
 									.addGap(29)
 									.addComponent(txtHeight, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE))
 								.addComponent(txtDiameter, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE))))
-					.addContainerGap(113, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		gl_panelDigit1.setVerticalGroup(
 			gl_panelDigit1.createParallelGroup(Alignment.TRAILING)
@@ -287,10 +279,10 @@ public class OpitzCodeWizardFrame extends JFrame {
 					.addGroup(gl_panelDigit1.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblDiameter)
 						.addComponent(txtDiameter, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 193, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 188, Short.MAX_VALUE)
 					.addGroup(gl_panelDigit1.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnToDigit2)
-						.addComponent(btnBkDigit1))
+						.addComponent(btnBkDigit1)
+						.addComponent(btnToDigit2))
 					.addContainerGap())
 		);
 		panelDigit1.setLayout(gl_panelDigit1);
@@ -327,6 +319,7 @@ public class OpitzCodeWizardFrame extends JFrame {
 	/**
 	 * Updates the form components according to the answer to question 1.
 	 */
+	@SuppressWarnings("unchecked")
 	private void updateD1Components() {
 		this.cboxExtShape.removeAllItems();
 		if (this.answerQ1) {
@@ -354,16 +347,20 @@ public class OpitzCodeWizardFrame extends JFrame {
 	}
 	
 	/**
-	 * Gets the first digit of the Optiz code based on the user's answers.
+	 * Gets the first digit of the Opitz code based on the user's answers.
 	 * @return The first digit in the Opitz code.
 	 */
 	private int getFirstDigit() {
+		
 		int result = 0;
 		double lByD = 0;
 		double aByB = 0;
 		double aByC = 0;
 		
 		if (this.answerQ1) {
+			if (this.txtLength.getText().isEmpty() || this.txtDiameter.getText().isEmpty()) {
+				return -1;
+			}
 			double L = Double.parseDouble(this.txtLength.getText());
 			double D = Double.parseDouble(this.txtDiameter.getText());
 			lByD = L / D;
@@ -393,6 +390,9 @@ public class OpitzCodeWizardFrame extends JFrame {
 					break;
 			}
 		} else {
+			if (this.txtLength.getText().isEmpty() || this.txtWidth.getText().isEmpty() || this.txtHeight.getText().isEmpty()) {
+				return -1;
+			}
 			double A = Double.parseDouble(this.txtLength.getText());
 			double B = Double.parseDouble(this.txtWidth.getText());
 			double C = Double.parseDouble(this.txtHeight.getText());
