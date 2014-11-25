@@ -29,6 +29,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.JInternalFrame;
+
+import entities.ExtShape;
 
 public class OpitzCodeWizardFrame extends JFrame {
 
@@ -48,6 +51,8 @@ public class OpitzCodeWizardFrame extends JFrame {
 	private JLabel lblWidth;
 	private JLabel lblLength;
 	private JLabel lblDiameter;
+	private String code;
+	private int[] code_int;
 
 	/**
 	 * Launch the application.
@@ -69,6 +74,9 @@ public class OpitzCodeWizardFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public OpitzCodeWizardFrame() {
+		
+		code_int = new int[9];
+		
 		setTitle("Opitz Code Recognition Wizard");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -138,11 +146,33 @@ public class OpitzCodeWizardFrame extends JFrame {
 		JPanel panelDigit1 = new JPanel();
 		tabbedPane.addTab("First Digit", null, panelDigit1, null);
 		
+		JPanel panelDigit2 = new JPanel();
+		tabbedPane.addTab("Second Digit", null, panelDigit2, null);
+		
+		JPanel panelD2O1 = new JPanel();
+		GroupLayout gl_panelDigit2 = new GroupLayout(panelDigit2);
+		gl_panelDigit2.setHorizontalGroup(
+			gl_panelDigit2.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_panelDigit2.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(panelD2O1, GroupLayout.DEFAULT_SIZE, 601, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		gl_panelDigit2.setVerticalGroup(
+			gl_panelDigit2.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_panelDigit2.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(panelD2O1, GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		panelDigit2.setLayout(gl_panelDigit2);
+		
 		JButton btnToDigit2 = new JButton("Next >");
 		btnToDigit2.setFont(new Font("Verdana", Font.PLAIN, 12));
 		btnToDigit2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println(getFirstDigit());
+				code_int[0] = getFirstDigit();
+				tabbedPane.setSelectedIndex(2);
 			}
 		});
 		
@@ -323,8 +353,8 @@ public class OpitzCodeWizardFrame extends JFrame {
 	private void updateD1Components() {
 		this.cboxExtShape.removeAllItems();
 		if (this.answerQ1) {
-			this.cboxExtShape.addItem(extShape.PURE_CIRCLE_OR_CYLINDER);
-			this.cboxExtShape.addItem(extShape.CIRCLE_OR_CYLINDER_WITH_DEVIATIONS);
+			this.cboxExtShape.addItem(ExtShape.PURE_CIRCLE_OR_CYLINDER);
+			this.cboxExtShape.addItem(ExtShape.CIRCLE_OR_CYLINDER_WITH_DEVIATIONS);
 			this.lblDiameter.setVisible(true);
 			this.lblLength.setVisible(true);
 			this.lblHeight.setVisible(false);
@@ -334,7 +364,7 @@ public class OpitzCodeWizardFrame extends JFrame {
 			this.txtHeight.setVisible(false);
 			this.txtWidth.setVisible(false);
 		} else {
-			this.cboxExtShape.addItem(extShape.FLAT_LONG_CUBIC);
+			this.cboxExtShape.addItem(ExtShape.FLAT_LONG_CUBIC);
 			this.lblDiameter.setVisible(false);
 			this.lblLength.setVisible(true);
 			this.lblHeight.setVisible(true);
@@ -364,7 +394,7 @@ public class OpitzCodeWizardFrame extends JFrame {
 			double L = Double.parseDouble(this.txtLength.getText());
 			double D = Double.parseDouble(this.txtDiameter.getText());
 			lByD = L / D;
-			switch ((extShape) this.cboxExtShape.getSelectedItem()) {
+			switch ((ExtShape) this.cboxExtShape.getSelectedItem()) {
 				case PURE_CIRCLE_OR_CYLINDER :
 					if (lByD <= 0.5) {
 						result = 0;
@@ -405,7 +435,7 @@ public class OpitzCodeWizardFrame extends JFrame {
 			aByB = A / B;
 			aByC = A / C;
 			
-			switch ((extShape) this.cboxExtShape.getSelectedItem()) {
+			switch ((ExtShape) this.cboxExtShape.getSelectedItem()) {
 				case FLAT_LONG_CUBIC :
 					if (aByB <= 3 && aByC >= 4) {
 						result = 6;
