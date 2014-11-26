@@ -1,6 +1,7 @@
 package entities;
 
 public enum ExtElementsStepped {
+	NONE("No shape elements"),
 	SMOOTH("Smooth"),
 	SCREW_THREADS("Has screw threads"),
 	FUNCTIONAL_GROOVE("Has functional groove");
