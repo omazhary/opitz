@@ -34,7 +34,10 @@ import javax.swing.JInternalFrame;
 import entities.ExtElements;
 import entities.ExtElementsStepped;
 import entities.ExtShape;
+import entities.HolesTeeth;
+import entities.InitForm;
 import entities.IntElements;
+import entities.Material;
 import entities.PlaneSurfaceMachining;
 
 import java.beans.PropertyChangeListener;
@@ -47,9 +50,13 @@ public class OpitzCodeWizardFrame extends JFrame {
 	private JPanel panelD2O1;
 	private JPanel panelD3O1;
 	private ButtonGroup btnQ1Group;
+	private ButtonGroup btnQ5Group;
 	private JRadioButton rdbtnQ1Yes;
 	private JRadioButton rdbtnQ1No;
+	private JRadioButton rdbtnQ5Yes;
+	private JRadioButton rdbtnQ5No;
 	private boolean answerQ1;
+	private boolean answerQ5;
 	private JTextField txtLength;
 	private JTextField txtWidth;
 	private JTextField txtHeight;
@@ -62,6 +69,14 @@ public class OpitzCodeWizardFrame extends JFrame {
 	private JComboBox cboxExtElementsStepped;
 	@SuppressWarnings("rawtypes")
 	private JComboBox cboxIntElements;
+	@SuppressWarnings("rawtypes")
+	private JComboBox cboxHolesTeeth;
+	@SuppressWarnings("rawtypes")
+	private JComboBox cboxMaterial;
+	@SuppressWarnings("rawtypes")
+	private JComboBox cboxInitForm;
+	@SuppressWarnings("rawtypes")
+	private JComboBox cboxPlSfMg;
 	private JLabel lblHeight;
 	private JLabel lblWidth;
 	private JLabel lblLength;
@@ -73,8 +88,9 @@ public class OpitzCodeWizardFrame extends JFrame {
 	private JButton btnToDigit3;
 	private JButton btnToDigit4;
 	private JButton btnToDigit5;
+	private JButton btnToDigit78;
+	private JButton btnToSummary;
 	private JLabel lblHowWouldYou;
-	private JComboBox cboxPlSfMg;
 
 	/**
 	 * Launch the application.
@@ -108,7 +124,7 @@ public class OpitzCodeWizardFrame extends JFrame {
 		setTitle("Opitz Code Recognition Wizard");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 640, 480);
+		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -151,10 +167,12 @@ public class OpitzCodeWizardFrame extends JFrame {
 					.addGap(18)
 					.addGroup(gl_panelWelcome.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 431, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_panelWelcome.createParallelGroup(Alignment.TRAILING)
-							.addComponent(btnToFirstDigit)
-							.addComponent(txtpnThisWizardWill, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(21, Short.MAX_VALUE))
+						.addComponent(txtpnThisWizardWill, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(185, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_panelWelcome.createSequentialGroup()
+					.addContainerGap(698, Short.MAX_VALUE)
+					.addComponent(btnToFirstDigit)
+					.addContainerGap())
 		);
 		gl_panelWelcome.setVerticalGroup(
 			gl_panelWelcome.createParallelGroup(Alignment.LEADING)
@@ -165,7 +183,7 @@ public class OpitzCodeWizardFrame extends JFrame {
 						.addComponent(lblIconWizard, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
 					.addGap(18)
 					.addComponent(txtpnThisWizardWill, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
 					.addComponent(btnToFirstDigit)
 					.addContainerGap())
 		);
@@ -226,9 +244,10 @@ public class OpitzCodeWizardFrame extends JFrame {
 		JLabel lblD2O1Q1 = new JLabel("1. How would you describe the external shape of the part?");
 		lblD2O1Q1.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
+		cboxExtElements = new JComboBox();
+		
 		cboxExtElementsStepped = new JComboBox();
 		
-		cboxExtElements = new JComboBox();
 		cboxExtElements.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateCboxExtElementsStepped();
@@ -430,18 +449,6 @@ public class OpitzCodeWizardFrame extends JFrame {
 		);
 		panelDigit1.setLayout(gl_panelDigit1);
 		
-		/* Custom code starts here. */
-		
-		this.rdbtnQ1No.setActionCommand("No");
-		this.rdbtnQ1Yes.setActionCommand("Yes");
-		
-		this.btnQ1Group = new ButtonGroup();
-		
-		this.btnQ1Group.add(rdbtnQ1Yes);
-		this.btnQ1Group.add(rdbtnQ1No);
-		
-		/* Custom code ends here. */
-		
 		JPanel panelDigit3 = new JPanel();
 		tabbedPane.addTab("Internal Shape", null, panelDigit3, null);
 		
@@ -525,6 +532,10 @@ public class OpitzCodeWizardFrame extends JFrame {
 		btnToDigit5 = new JButton("Next >");
 		btnToDigit5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				code_int[3] = getFourthDigit();
+				code += code_int[3];
+				updateD5Components();
+				tabbedPane.setSelectedIndex(5);
 			}
 		});
 		btnToDigit5.setFont(new Font("Verdana", Font.PLAIN, 12));
@@ -541,6 +552,7 @@ public class OpitzCodeWizardFrame extends JFrame {
 		lblHowWouldYou.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		cboxPlSfMg = new JComboBox();
+		cboxPlSfMg.setFont(new Font("Verdana", Font.PLAIN, 12));
 		//GroupLayout gl_panel;
 		gl_panelDigit4 = new GroupLayout(panelDigit4);
 		gl_panelDigit4.setHorizontalGroup(
@@ -573,14 +585,206 @@ public class OpitzCodeWizardFrame extends JFrame {
 		);
 		panelDigit4.setLayout(gl_panelDigit4);
 		
+		JPanel panelDigit5 = new JPanel();
+		tabbedPane.addTab("Auxiliary Hole(s) and Gear Teeth", null, panelDigit5, null);
+		
+		btnToDigit78 = new JButton("Next >");
+		btnToDigit78.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				code_int[4] = getFifthDigit();
+				code += code_int[4];
+				updateD78Components();
+				tabbedPane.setSelectedIndex(6);
+			}
+		});
+		btnToDigit78.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JButton btnBkDigit5 = new JButton("< Back");
+		btnBkDigit5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tabbedPane.setSelectedIndex(4);
+			}
+		});
+		btnBkDigit5.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblD5Q1 = new JLabel("1. Does the part have gear teeth?");
+		lblD5Q1.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		rdbtnQ5Yes = new JRadioButton("Yes");
+		rdbtnQ5Yes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				answerQ5 = getYesNo(e);
+				updateD5Components();
+			}
+		});
+		rdbtnQ5Yes.setSelected(true);
+		rdbtnQ5Yes.setFont(new Font("Verdana", Font.PLAIN, 12));
+		rdbtnQ5Yes.setActionCommand("Yes");
+		
+		rdbtnQ5No = new JRadioButton("No");
+		rdbtnQ5No.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				answerQ5 = getYesNo(e);
+				updateD5Components();
+			}
+		});
+		rdbtnQ5No.setFont(new Font("Verdana", Font.PLAIN, 12));
+		rdbtnQ5No.setActionCommand("No");
+		
+		JLabel lblD5Q2 = new JLabel("2. How would you describe the part's holes/teeth?");
+		lblD5Q2.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		cboxHolesTeeth = new JComboBox();
+		cboxHolesTeeth.setFont(new Font("Verdana", Font.PLAIN, 12));
+		GroupLayout gl_panelDigit5 = new GroupLayout(panelDigit5);
+		gl_panelDigit5.setHorizontalGroup(
+			gl_panelDigit5.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panelDigit5.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panelDigit5.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblD5Q1, GroupLayout.PREFERRED_SIZE, 216, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_panelDigit5.createSequentialGroup()
+							.addGap(12)
+							.addComponent(rdbtnQ5Yes, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(rdbtnQ5No, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE))
+						.addComponent(lblD5Q2, GroupLayout.PREFERRED_SIZE, 319, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_panelDigit5.createSequentialGroup()
+							.addGap(12)
+							.addComponent(cboxHolesTeeth, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(Alignment.TRAILING, gl_panelDigit5.createSequentialGroup()
+							.addComponent(btnBkDigit5)
+							.addPreferredGap(ComponentPlacement.RELATED, 609, Short.MAX_VALUE)
+							.addComponent(btnToDigit78)))
+					.addContainerGap())
+		);
+		gl_panelDigit5.setVerticalGroup(
+			gl_panelDigit5.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panelDigit5.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblD5Q1, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+					.addGap(8)
+					.addGroup(gl_panelDigit5.createParallelGroup(Alignment.LEADING)
+						.addComponent(rdbtnQ5Yes, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+						.addComponent(rdbtnQ5No, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addComponent(lblD5Q2, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+					.addGap(6)
+					.addComponent(cboxHolesTeeth, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(400)
+					.addGroup(gl_panelDigit5.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnToDigit78)
+						.addComponent(btnBkDigit5))
+					.addContainerGap())
+		);
+		panelDigit5.setLayout(gl_panelDigit5);
+		
+		/* Custom code starts here. */
+		
+		this.rdbtnQ1No.setActionCommand("No");
+		this.rdbtnQ1Yes.setActionCommand("Yes");
+		this.rdbtnQ5No.setActionCommand("No");
+		this.rdbtnQ5Yes.setActionCommand("Yes");
+		
+		this.btnQ1Group = new ButtonGroup();
+		this.btnQ5Group = new ButtonGroup();
+		
+		this.btnQ1Group.add(this.rdbtnQ1Yes);
+		this.btnQ1Group.add(this.rdbtnQ1No);
+		this.btnQ5Group.add(this.rdbtnQ5Yes);
+		this.btnQ5Group.add(this.rdbtnQ5No);
+		
+		JPanel panelDigit78 = new JPanel();
+		tabbedPane.addTab("Material and Initial Form", null, panelDigit78, null);
+		
+		JLabel lblWhatMaterial = new JLabel("1. What material should the part be made of?");
+		lblWhatMaterial.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		cboxMaterial = new JComboBox();
+		cboxMaterial.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblWhatIs = new JLabel("2. What is the initial form of the material you chose above?");
+		lblWhatIs.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		cboxInitForm = new JComboBox();
+		cboxInitForm.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JButton btnBkDigit78 = new JButton("< Back");
+		btnBkDigit78.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tabbedPane.setSelectedIndex(5);
+			}
+		});
+		btnBkDigit78.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		btnToSummary = new JButton("Next >");
+		btnToSummary.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				code_int[5] = getSixthDigit();
+				code += code_int[5];
+				code_int[6] = getSeventhDigit();
+				code += code_int[6];
+				code_int[7] = getEighthDigit();
+				code += code_int[7];
+				code_int[8] = getNinthDigit();
+				code += code_int[8];
+				updateSummary();
+				tabbedPane.setSelectedIndex(7);
+			}
+		});
+		btnToSummary.setFont(new Font("Verdana", Font.PLAIN, 12));
+		GroupLayout gl_panelDigit78 = new GroupLayout(panelDigit78);
+		gl_panelDigit78.setHorizontalGroup(
+			gl_panelDigit78.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panelDigit78.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panelDigit78.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panelDigit78.createSequentialGroup()
+							.addGap(12)
+							.addComponent(cboxInitForm, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panelDigit78.createSequentialGroup()
+							.addGap(12)
+							.addComponent(cboxMaterial, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(lblWhatMaterial)
+						.addComponent(lblWhatIs)
+						.addGroup(gl_panelDigit78.createSequentialGroup()
+							.addComponent(btnBkDigit78)
+							.addPreferredGap(ComponentPlacement.RELATED, 403, Short.MAX_VALUE)
+							.addComponent(btnToSummary)))
+					.addContainerGap())
+		);
+		gl_panelDigit78.setVerticalGroup(
+			gl_panelDigit78.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panelDigit78.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblWhatMaterial)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(cboxMaterial, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(lblWhatIs)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(cboxInitForm, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 283, Short.MAX_VALUE)
+					.addGroup(gl_panelDigit78.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnBkDigit78)
+						.addComponent(btnToSummary))
+					.addContainerGap())
+		);
+		panelDigit78.setLayout(gl_panelDigit78);
+		
 		this.answerQ1 = true;
+		this.answerQ5 = true;
 		
 		this.updateD1Components();
 		this.updateD2Components();
 		this.updateD3Components();
 		this.updateD4Components();
+		this.updateD5Components();
+		this.updateD78Components();
 		
 		this.updateCboxExtElementsStepped();
+		
+		/* Custom code ends here. */
 	
 	}
 	
@@ -658,7 +862,7 @@ public class OpitzCodeWizardFrame extends JFrame {
 	/**
 	 * Populates the combo box with internal shape elements.
 	 */
-	@SuppressWarnings({ "unused", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	private void updateCboxIntElements() {
 		this.cboxIntElements.removeAllItems();
 		this.cboxIntElements.addItem(IntElements.NO_HOLE_BREAKTHROUGH);
@@ -706,25 +910,98 @@ public class OpitzCodeWizardFrame extends JFrame {
 	/**
 	 * Populates the combo box based on the first digit's value.
 	 */
-	@SuppressWarnings({ "unused", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	private void updateD4Components() {
 		if (this.code_int[0] < 0) {
 			this.btnToDigit5.setEnabled(false);
 			return;
 		} else {
-			this.btnToDigit3.setEnabled(true);
+			this.btnToDigit5.setEnabled(true);
+			this.cboxPlSfMg.removeAllItems();
 			this.cboxPlSfMg.addItem(PlaneSurfaceMachining.NONE);
 			if (this.code_int[0] < 5) {
-				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.NONE);
-				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.NONE);
-				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.NONE);
-				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.NONE);
-				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.NONE);
-				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.NONE);
-				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.NONE);
+				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.CURVED_ONE_DIRECTION);
+				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.CURVED_CIRCLE);
+				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.EXT_GROOVE_SLOT);
+				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.EXT_SPLINE);
+				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.EXT_SPLINE_SLOT);
+				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.INT_PLANE_SLOT);
+				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.INT_SPLINE);
+				this.cboxPlSfMg.addItem(PlaneSurfaceMachining.INT_EXT_POLYGON_GROOVE_SLOT);
 			}
-			this.cboxPlSfMg.addItem(PlaneSurfaceMachining.NONE);
+			this.cboxPlSfMg.addItem(PlaneSurfaceMachining.MISC);
 		}
+	}
+	
+	/**
+	 * Decides what components to show based on the first digit's value and populates the combo boxes accordingly.
+	 */
+	@SuppressWarnings("unchecked")
+	private void updateD5Components() {
+		if (this.code_int[0] < 0) {
+			this.btnToDigit78.setEnabled(false);
+			return;
+		} else {
+			this.btnToDigit78.setEnabled(true);
+			this.cboxHolesTeeth.removeAllItems();
+			if (this.code_int[0] < 3) {
+				if (this.answerQ5) {
+					this.cboxHolesTeeth.addItem(HolesTeeth.TEETH_SPUR);
+					this.cboxHolesTeeth.addItem(HolesTeeth.TEETH_BEVEL);
+					this.cboxHolesTeeth.addItem(HolesTeeth.TEETH_MISC);
+					this.cboxHolesTeeth.addItem(HolesTeeth.MISC);
+				} else {
+					this.cboxHolesTeeth.addItem(HolesTeeth.NONE_1);
+					this.cboxHolesTeeth.addItem(HolesTeeth.HOLES_AXIAL_UNRELATED);
+					this.cboxHolesTeeth.addItem(HolesTeeth.HOLES_AXIAL_RELATED);
+					this.cboxHolesTeeth.addItem(HolesTeeth.HOLES_RADIAL_UNRELATED);
+					this.cboxHolesTeeth.addItem(HolesTeeth.HOLES_AXIAL_RADIAL_UNRELATED);
+					this.cboxHolesTeeth.addItem(HolesTeeth.HOLES_AXIAL_RADIAL_RELATED);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Populates the combo boxes for digits 7 and 8.
+	 */
+	@SuppressWarnings("unchecked")
+	private void updateD78Components() {
+		if (this.code_int[0] < 0) {
+			this.btnToSummary.setEnabled(false);
+			return;
+		} else {
+			this.btnToSummary.setEnabled(true);
+			
+			this.cboxMaterial.addItem(Material.CAST_IRON);
+			this.cboxMaterial.addItem(Material.GRPH_MALL_CAST_IRON);
+			this.cboxMaterial.addItem(Material.STEEL_LESS);
+			this.cboxMaterial.addItem(Material.STEEL_MORE);
+			this.cboxMaterial.addItem(Material.STEEL_MORE_LESS_HEAT);
+			this.cboxMaterial.addItem(Material.STEEL_ALLOY);
+			this.cboxMaterial.addItem(Material.STEEL_ALLOY_HEAT);
+			this.cboxMaterial.addItem(Material.NON_FER_METAL);
+			this.cboxMaterial.addItem(Material.LIGHT_ALLOY);
+			this.cboxMaterial.addItem(Material.MISC);
+			
+			this.cboxInitForm.addItem(InitForm.BAR_ROUND_BLACK);
+			this.cboxInitForm.addItem(InitForm.BAR_ROUND_BRIGHT_DRAWN);
+			this.cboxInitForm.addItem(InitForm.BAR_MISC);
+			this.cboxInitForm.addItem(InitForm.TUBING);
+			this.cboxInitForm.addItem(InitForm.ANGLE);
+			this.cboxInitForm.addItem(InitForm.SHEET);
+			this.cboxInitForm.addItem(InitForm.PLATE_SLABS);
+			this.cboxInitForm.addItem(InitForm.CAST_FORGED);
+			this.cboxInitForm.addItem(InitForm.WELDED);
+			this.cboxInitForm.addItem(InitForm.PRE_MACHINED);
+		}
+	}
+	
+	/**
+	 * Updates the summary page for the wizard.
+	 */
+	private void updateSummary() {
+		
 	}
 	
 	/**
@@ -936,6 +1213,49 @@ public class OpitzCodeWizardFrame extends JFrame {
 	private int getFourthDigit() {
 		PlaneSurfaceMachining temp = (PlaneSurfaceMachining) this.cboxPlSfMg.getSelectedItem(); 
 		return temp.getDigit();
+	}
+	
+	/**
+	 * Gets the fifth digit of the Opitz code based on the user's answers.
+	 * @return An int containing the fifth digit of the Opitz code.
+	 */
+	private int getFifthDigit() {
+		HolesTeeth temp = (HolesTeeth) this.cboxHolesTeeth.getSelectedItem(); 
+		return temp.getDigit();
+	}
+	
+	/**
+	 * Gets the sixth digit of the Opitz code based on the user's answers in Q1.
+	 * @return An int containing the sixth digit of the Opitz code.
+	 */
+	private int getSixthDigit() {
+		return 0;
+	}
+	
+	/**
+	 * Gets the seventh digit of the Opitz code based on the user's answers.
+	 * @return An int containing the seventh digit of the Opitz code.
+	 */
+	private int getSeventhDigit() {
+		Material temp = (Material) this.cboxMaterial.getSelectedItem(); 
+		return temp.getDigit();
+	}
+	
+	/**
+	 * Gets the eighth digit of the Opitz code based on the user's answers.
+	 * @return An int containing the eighth digit of the Opitz code.
+	 */
+	private int getEighthDigit() {
+		InitForm temp = (InitForm) this.cboxInitForm.getSelectedItem(); 
+		return temp.getDigit();
+	}
+	
+	/**
+	 * Gets the ninth digit of the Opitz code based on the user's self-accuracy answers.
+	 * @return An int containing the ninth digit of the Opitz code.
+	 */
+	private int getNinthDigit() {
+		return 0;
 	}
 	
 	/**
