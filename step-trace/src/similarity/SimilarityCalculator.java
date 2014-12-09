@@ -31,7 +31,8 @@ public class SimilarityCalculator {
 		for (int i = 0; i < model_list.getModelListSize(); i++){
 			CADModel temp = model_list.getModel(i);
 			Opitz tempCode = new Opitz(temp.getPartGTCode());
-			double tempSim = this.calculator.getSimilarity(this.applyWeights(code.getCode(), weights), this.applyWeights(tempCode.getCode(), weights)); 
+			double tempSim = this.calculator.getSimilarity(this.applyWeights(code.getCode(), weights), this.applyWeights(tempCode.getCode(), weights));
+			System.out.println("Model " + (i + 1) + " at " + tempSim);
 			if (tempSim >= threshold) {
 				temp.setSimilarity(tempSim);
 				result1.add(temp);
@@ -47,7 +48,7 @@ public class SimilarityCalculator {
 	}
 	
 	/**
-	 * Applies the weights to the given code by multiplying the code digit by 10^weight.
+	 * Applies the weights to the given code by multiplying the code digit by weight.
 	 * @param code The code to which the weight should be applied.
 	 * @param weights The weights that will be applied.
 	 * @return An Integer[] containing the weighted values of the code.

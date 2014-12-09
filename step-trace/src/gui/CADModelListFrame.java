@@ -42,6 +42,7 @@ public class CADModelListFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public CADModelListFrame() {
+		setTitle("Available Models");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 640, 480);

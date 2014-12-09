@@ -44,6 +44,10 @@ import javax.swing.JSlider;
 
 import entities.CADModel;
 import entities.CADModelList;
+import entities.InitForm;
+import entities.Material;
+
+import javax.swing.JComboBox;
 
 public class MainWindow extends JFrame {
 
@@ -55,6 +59,8 @@ public class MainWindow extends JFrame {
 	private JTable tableSimModels;
 	private JSlider sliderSimThreshold;
 	private Preferences pref;
+	private JComboBox cboxMaterial;
+	private JComboBox cboxInitForm;
 
 	/**
 	 * Launch the application.
@@ -75,6 +81,7 @@ public class MainWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings("unchecked")
 	public MainWindow() {
 		setTitle("Step-Trace");
 		setResizable(false);
@@ -153,7 +160,7 @@ public class MainWindow extends JFrame {
 		JMenuItem mntmRecogWizard = new JMenuItem("Use Recognition Wizard");
 		mntmRecogWizard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				OpitzCodeWizardFrame wizard = new OpitzCodeWizardFrame();
+				OpitzCodeWizardFrame wizard = new OpitzCodeWizardFrame(txtRecCode);
 				wizard.setVisible(true);
 			}
 		});
@@ -340,27 +347,45 @@ public class MainWindow extends JFrame {
 			}
 		});
 		btnSearchForSimilar.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblMaterial = new JLabel("Material:");
+		lblMaterial.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		cboxMaterial = new JComboBox();
+		
+		JLabel lblInitialForm = new JLabel("Initial Form:");
+		lblInitialForm.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		cboxInitForm = new JComboBox();
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane_log, GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
+						.addComponent(scrollPane_log, GroupLayout.DEFAULT_SIZE, 769, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnRunRecognition)
+								.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+									.addComponent(lblRecognizedOpitzCode)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
+								.addComponent(btnRunRecognition, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, 214, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(btnChooseFile))
-								.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblRecognizedOpitzCode)
-								.addComponent(lblSimilarityThreshold)
-								.addComponent(sliderSimThreshold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnSearchForSimilar)
+								.addComponent(cboxMaterial, Alignment.TRAILING, 0, 401, Short.MAX_VALUE)
+								.addComponent(cboxInitForm, Alignment.TRAILING, 0, 401, Short.MAX_VALUE)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblSimilarityThreshold)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(sliderSimThreshold, GroupLayout.PREFERRED_SIZE, 237, GroupLayout.PREFERRED_SIZE))
+								.addComponent(lblInitialForm)
+								.addComponent(lblMaterial)
+								.addComponent(btnSearchForSimilar, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
 								.addComponent(lblLog))
-							.addPreferredGap(ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblMatches)
 								.addComponent(scrollPane_matches, GroupLayout.PREFERRED_SIZE, 356, GroupLayout.PREFERRED_SIZE))))
@@ -370,34 +395,38 @@ public class MainWindow extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblMatches)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(scrollPane_matches, GroupLayout.PREFERRED_SIZE, 347, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(46)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnChooseFile))
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(btnRunRecognition)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(lblRecognizedOpitzCode)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(lblSimilarityThreshold)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(sliderSimThreshold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(btnSearchForSimilar)))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblMatches)
+						.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnChooseFile))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(scrollPane_matches, GroupLayout.PREFERRED_SIZE, 347, GroupLayout.PREFERRED_SIZE)
 							.addGap(16))
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+							.addComponent(lblMaterial)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(cboxMaterial, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(13)
+							.addComponent(lblInitialForm)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(cboxInitForm, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(btnRunRecognition)
+							.addGap(18)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblRecognizedOpitzCode))
+							.addGap(31)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblSimilarityThreshold)
+								.addComponent(sliderSimThreshold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(18)
+							.addComponent(btnSearchForSimilar)
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 							.addComponent(lblLog)
-							.addGap(7)))
+							.addGap(6)))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(scrollPane_log, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
 					.addGap(30))
@@ -417,6 +446,31 @@ public class MainWindow extends JFrame {
 		));
 		tableSimModels.setFont(new Font("Verdana", Font.PLAIN, 12));
 		scrollPane_matches.setViewportView(tableSimModels);
+		
+		this.cboxMaterial.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXX");
+		this.cboxInitForm.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXX");
+		
+		this.cboxMaterial.addItem(Material.CAST_IRON);
+		this.cboxMaterial.addItem(Material.GRPH_MALL_CAST_IRON);
+		this.cboxMaterial.addItem(Material.STEEL_LESS);
+		this.cboxMaterial.addItem(Material.STEEL_MORE);
+		this.cboxMaterial.addItem(Material.STEEL_MORE_LESS_HEAT);
+		this.cboxMaterial.addItem(Material.STEEL_ALLOY);
+		this.cboxMaterial.addItem(Material.STEEL_ALLOY_HEAT);
+		this.cboxMaterial.addItem(Material.NON_FER_METAL);
+		this.cboxMaterial.addItem(Material.LIGHT_ALLOY);
+		this.cboxMaterial.addItem(Material.MISC);
+
+		this.cboxInitForm.addItem(InitForm.BAR_ROUND_BLACK);
+		this.cboxInitForm.addItem(InitForm.BAR_ROUND_BRIGHT_DRAWN);
+		this.cboxInitForm.addItem(InitForm.BAR_MISC);
+		this.cboxInitForm.addItem(InitForm.TUBING);
+		this.cboxInitForm.addItem(InitForm.ANGLE);
+		this.cboxInitForm.addItem(InitForm.SHEET);
+		this.cboxInitForm.addItem(InitForm.PLATE_SLABS);
+		this.cboxInitForm.addItem(InitForm.CAST_FORGED);
+		this.cboxInitForm.addItem(InitForm.WELDED);
+		this.cboxInitForm.addItem(InitForm.PRE_MACHINED);
 		
 		contentPane.setLayout(gl_contentPane);
 	}

@@ -70,7 +70,7 @@ public class CosineSimCalculator {
      */
     private double getNorm(double[] in) throws CosineSimException {
         double temp_result = this.getDotProduct(in, in);
-        return temp_result;
+        return Math.sqrt(temp_result);
     }
     
     /**
