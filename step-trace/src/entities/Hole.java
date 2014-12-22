@@ -18,10 +18,10 @@ public class Hole {
     private FaceBound holeObject;
     private CartesianPoint[] points;
     private float[] representative;
-    private float[] direction;
+    private Float[] direction;
     private String housingPlaneGeometry;
 
-    public Hole(FaceBound holeObject, float[] planeDirection, AdvancedFace plane) {
+    public Hole(FaceBound holeObject, Float[] planeDirection, AdvancedFace plane) {
         this.holeObject = holeObject;
         this.points = new CartesianPoint[this.holeObject.getAllPoints().size()];
         this.representative = new float[3];
@@ -75,7 +75,7 @@ public class Hole {
      *
      * @return A float array where [0] => X, [1] => Y and [2] => Z.
      */
-    public float[] getDirectionComponents() {
+    public Float[] getDirectionComponents() {
         return this.direction;
     }
 

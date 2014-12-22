@@ -27,6 +27,8 @@ import javax.swing.JToolBar;
 import javax.swing.ImageIcon;
 
 import entities.CADModel;
+import entities.InitForm;
+import entities.Material;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -34,9 +36,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.awt.Window.Type;
+
 import javax.swing.SwingConstants;
 
 import recognition.Recognizer;
+
+import javax.swing.JComboBox;
 
 public class CADModelFrame extends JFrame {
 
@@ -48,6 +53,8 @@ public class CADModelFrame extends JFrame {
 	private JTextField txtFilePath;
 	private JTextArea txtAreaPartDescription;
 	private JLabel lblStatus;
+	private JComboBox cboxMaterial;
+	private JComboBox cboxInitForm;
 	
 	private Recognizer recog;
 	private CADModel cadModel;
@@ -71,6 +78,7 @@ public class CADModelFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings("unchecked")
 	public CADModelFrame(boolean editable, String identifier) {
 		this.recog = new Recognizer();
 		
@@ -137,7 +145,7 @@ public class CADModelFrame extends JFrame {
 	            } else {
 	            	txtFilePath.setText("An error has occured.");
 	            }
-	            recog.mainProcedure(txtFilePath.getText(), false);
+	            recog.mainProcedure(txtFilePath.getText(), false, (Material) cboxMaterial.getSelectedItem(), (InitForm) cboxInitForm.getSelectedItem());
 	            txtCode.setText(recog.getCode());
 			}
 		});
@@ -145,44 +153,61 @@ public class CADModelFrame extends JFrame {
 		
 		lblStatus = new JLabel("Ready...");
 		lblStatus.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblMaterial = new JLabel("Material:");
+		lblMaterial.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		cboxMaterial = new JComboBox();
+		cboxMaterial.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblInitialForm = new JLabel("Initial Form:");
+		lblInitialForm.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		cboxInitForm = new JComboBox();
+		cboxInitForm.setFont(new Font("Verdana", Font.PLAIN, 12));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addComponent(toolBar, GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addComponent(toolBar, GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+							.addContainerGap())
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblPartDescription)
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(lblPartIdentifier)
 										.addGroup(gl_contentPane.createSequentialGroup()
-											.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(lblPartPath)
-												.addComponent(lblPartName))
+											.addComponent(lblPartIdentifier)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(lblIdentifier, GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE))
+										.addComponent(lblMaterial)
+										.addComponent(cboxMaterial, 0, 335, Short.MAX_VALUE)
+										.addComponent(lblInitialForm)
+										.addComponent(cboxInitForm, 0, 335, Short.MAX_VALUE)
+										.addComponent(lblPartGtCode)
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addComponent(lblPartPath)
 											.addGap(27)
 											.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(txtPartName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addComponent(txtCode, GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
 												.addGroup(gl_contentPane.createSequentialGroup()
-													.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-														.addGroup(gl_contentPane.createSequentialGroup()
-															.addPreferredGap(ComponentPlacement.UNRELATED)
-															.addComponent(txtCode))
-														.addComponent(txtFilePath))
+													.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 													.addPreferredGap(ComponentPlacement.UNRELATED)
-													.addComponent(btnBrowsePartFile))))
-										.addComponent(lblPartGtCode))
-									.addGap(38)
-									.addComponent(lblIdentifier, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 261, GroupLayout.PREFERRED_SIZE)))
-					.addGap(8))
-				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+													.addComponent(btnBrowsePartFile, GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))))
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addComponent(lblPartName)
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addComponent(txtPartName, GroupLayout.PREFERRED_SIZE, 246, GroupLayout.PREFERRED_SIZE)))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(panel, GroupLayout.PREFERRED_SIZE, 261, GroupLayout.PREFERRED_SIZE)))
+							.addGap(10))))
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblStatus, GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
+					.addComponent(lblStatus, GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
@@ -192,33 +217,41 @@ public class CADModelFrame extends JFrame {
 					.addComponent(toolBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblIdentifier, GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblPartIdentifier)
-									.addGap(11)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblPartName)
-										.addComponent(txtPartName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblPartPath)
-										.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnBrowsePartFile))
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblPartGtCode)
-										.addComponent(txtCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-							.addGap(129)
-							.addComponent(lblPartDescription))
-						.addGroup(gl_contentPane.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 265, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 265, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(18)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblPartIdentifier)
+								.addComponent(lblIdentifier, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+							.addGap(8)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblPartName)
+								.addComponent(txtPartName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lblMaterial)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(cboxMaterial, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lblInitialForm)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(cboxInitForm, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblPartPath)
+								.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnBrowsePartFile))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblPartGtCode)
+								.addComponent(txtCode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(36)
+							.addComponent(lblPartDescription)))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE)
-					.addGap(8)
-					.addComponent(lblStatus))
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
+					.addGap(15)
+					.addComponent(lblStatus)
+					.addContainerGap())
 		);
 		
 		JButton btnAdd = new JButton("Add");
@@ -313,19 +346,55 @@ public class CADModelFrame extends JFrame {
 		
 		updateImageLabel(lblImage);
 		
+		this.cboxMaterial.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXX");
+		this.cboxInitForm.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXX");
+		
+		this.cboxMaterial.addItem(Material.CAST_IRON);
+		this.cboxMaterial.addItem(Material.GRPH_MALL_CAST_IRON);
+		this.cboxMaterial.addItem(Material.STEEL_LESS);
+		this.cboxMaterial.addItem(Material.STEEL_MORE);
+		this.cboxMaterial.addItem(Material.STEEL_MORE_LESS_HEAT);
+		this.cboxMaterial.addItem(Material.STEEL_ALLOY);
+		this.cboxMaterial.addItem(Material.STEEL_ALLOY_HEAT);
+		this.cboxMaterial.addItem(Material.NON_FER_METAL);
+		this.cboxMaterial.addItem(Material.LIGHT_ALLOY);
+		this.cboxMaterial.addItem(Material.MISC);
+
+		this.cboxInitForm.addItem(InitForm.BAR_ROUND_BLACK);
+		this.cboxInitForm.addItem(InitForm.BAR_ROUND_BRIGHT_DRAWN);
+		this.cboxInitForm.addItem(InitForm.BAR_MISC);
+		this.cboxInitForm.addItem(InitForm.TUBING);
+		this.cboxInitForm.addItem(InitForm.ANGLE);
+		this.cboxInitForm.addItem(InitForm.SHEET);
+		this.cboxInitForm.addItem(InitForm.PLATE_SLABS);
+		this.cboxInitForm.addItem(InitForm.CAST_FORGED);
+		this.cboxInitForm.addItem(InitForm.WELDED);
+		this.cboxInitForm.addItem(InitForm.PRE_MACHINED);
+		
 		if(!editable) {
 			txtPartName.setEditable(false);
 			txtCode.setEditable(false);
 			txtImagePath.setEditable(false);
 			txtAreaPartDescription.setEditable(false);
+			txtFilePath.setEditable(false);
+			this.cboxMaterial.setEditable(false);
+			this.cboxInitForm.setEditable(false);
 		}
 		
 		if (identifier != null) {
 			this.cadModel = new CADModel(identifier);
-			this.setTitle(this.cadModel.getPartName());
+			this.setTitle(identifier + " - " + this.cadModel.getPartName());
+			this.txtPartName.setText(this.cadModel.getPartName());
+			this.txtCode.setText(this.cadModel.getPartGTCode());
+			this.txtImagePath.setText(this.cadModel.getPartImagePath());
+			this.txtAreaPartDescription.setText(this.cadModel.getPartDescription());
+			this.txtFilePath.setText(this.cadModel.getPartPath());
+			this.updateImageLabel(this.lblImage);
+			lblIdentifier.setText(identifier);
 		} else {
 			this.setTitle("New Model");
 		}
+		
 	}
 	
 	private void updateImageLabel(JLabel label) {
@@ -336,6 +405,9 @@ public class CADModelFrame extends JFrame {
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+			}
+			if (label.getWidth() == 0 || label.getHeight() == 0) {
+				label.setSize(240, 175);
 			}
 			Image image_scaled = image_raw.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_FAST);
 			ImageIcon image_final = new ImageIcon(image_scaled);

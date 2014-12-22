@@ -20,6 +20,8 @@ import java.awt.Font;
 import javax.swing.AbstractListModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CADModelListFrame extends JFrame {
 
@@ -82,11 +84,20 @@ public class CADModelListFrame extends JFrame {
 		);
 		
 		tableModels = new JTable();
+		tableModels.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					CADModelFrame temp = new CADModelFrame(false, model_list.getModel(tableModels.getSelectedRow()).getPartIdentifier());
+					temp.setVisible(true);
+				}
+			}
+		});
 		tableModels.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"Part Name", "Part Description"
+				"ID", "Part Name", "Part Description"
 			}
 		));
 		tableModels.setFont(new Font("Verdana", Font.PLAIN, 12));
@@ -98,7 +109,7 @@ public class CADModelListFrame extends JFrame {
 		progressBarList.setValue(50);
 		this.labelProgress.setText("Retrieving Model info...");
 		
-		DefaultTableModel tempModel = new DefaultTableModel(new Object[][] {}, new String[] {"Part Name", "Part Description"}) {
+		DefaultTableModel tempModel = new DefaultTableModel(new Object[][] {}, new String[] {"ID", "Part Name", "Part Description"}) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;

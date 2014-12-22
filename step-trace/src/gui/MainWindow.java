@@ -27,6 +27,11 @@ import utils.Preferences;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
@@ -104,6 +109,42 @@ public class MainWindow extends JFrame {
 				System.exit(NORMAL);
 			}
 		});
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("Dump Log to File");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser c = new JFileChooser();
+				c.setFileFilter(new FileNameExtensionFilter("Text Files", "txt"));
+				c.setFileHidingEnabled(true);
+	            int rVal = c.showOpenDialog(MainWindow.this);
+	            String path = "";
+	            if (rVal == JFileChooser.APPROVE_OPTION) {
+	            	if (!c.getSelectedFile().getAbsolutePath().endsWith(".txt")) {
+	            		path = c.getSelectedFile().getAbsolutePath() + ".txt";
+	            	} else {
+	            		path = c.getSelectedFile().getAbsolutePath();
+	            	}
+	            	try {
+						BufferedOutputStream dump_out = new BufferedOutputStream(new FileOutputStream(new File(path)));
+						dump_out.write(textArea_log.getText().getBytes());
+						dump_out.flush();
+						dump_out.close();
+						printToLog("Dump Successful: Log dumped to " + path);
+					} catch (FileNotFoundException e1) {
+						printToLog("Error: Unable to open dump file.");
+					} catch (IOException e1) {
+						printToLog("Error: Unable to write to dump file.");
+					}
+	            } else if (rVal == JFileChooser.CANCEL_OPTION) {
+	            	printToLog("Log dump cancelled.");
+	            } else {
+	            	printToLog("An error has occured during log dump.");
+	            }
+			}
+		});
+		mntmNewMenuItem.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/save_20.png")));
+		mntmNewMenuItem.setFont(new Font("Verdana", Font.PLAIN, 12));
+		mnFile.add(mntmNewMenuItem);
 		mntmQuit.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/quit_20.png")));
 		mntmQuit.setFont(new Font("Verdana", Font.PLAIN, 12));
 		mnFile.add(mntmQuit);
@@ -281,7 +322,7 @@ public class MainWindow extends JFrame {
 		JButton btnRunRecognition = new JButton("Run Recognition");
 		btnRunRecognition.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				recog.mainProcedure(txtFilePath.getText(), false);
+				recog.mainProcedure(txtFilePath.getText(), false, (Material) cboxMaterial.getSelectedItem(), (InitForm) cboxInitForm.getSelectedItem());
 				txtRecCode.setText(recog.getCode());
 				String temp = "";
 				for (int i = 0; i < recog.getTrace().size(); i++) {
@@ -371,19 +412,19 @@ public class MainWindow extends JFrame {
 									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addComponent(txtRecCode, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
 								.addComponent(btnRunRecognition, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, 214, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
+								.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+									.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, 282, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addComponent(btnChooseFile))
 								.addComponent(cboxMaterial, Alignment.TRAILING, 0, 401, Short.MAX_VALUE)
 								.addComponent(cboxInitForm, Alignment.TRAILING, 0, 401, Short.MAX_VALUE)
-								.addGroup(gl_contentPane.createSequentialGroup()
+								.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
 									.addComponent(lblSimilarityThreshold)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(sliderSimThreshold, GroupLayout.PREFERRED_SIZE, 237, GroupLayout.PREFERRED_SIZE))
-								.addComponent(lblInitialForm)
-								.addComponent(lblMaterial)
 								.addComponent(btnSearchForSimilar, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+								.addComponent(lblMaterial)
+								.addComponent(lblInitialForm)
 								.addComponent(lblLog))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -400,17 +441,20 @@ public class MainWindow extends JFrame {
 						.addComponent(txtFilePath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnChooseFile))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(scrollPane_matches, GroupLayout.PREFERRED_SIZE, 347, GroupLayout.PREFERRED_SIZE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(scrollPane_matches, GroupLayout.PREFERRED_SIZE, 347, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblMaterial)
+									.addPreferredGap(ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+									.addComponent(lblInitialForm)
+									.addGap(272)))
 							.addGap(16))
-						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-							.addComponent(lblMaterial)
-							.addPreferredGap(ComponentPlacement.RELATED)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(22)
 							.addComponent(cboxMaterial, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(13)
-							.addComponent(lblInitialForm)
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGap(35)
 							.addComponent(cboxInitForm, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(18)
 							.addComponent(btnRunRecognition)
@@ -424,7 +468,7 @@ public class MainWindow extends JFrame {
 								.addComponent(sliderSimThreshold, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
 							.addComponent(btnSearchForSimilar)
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
 							.addComponent(lblLog)
 							.addGap(6)))
 					.addPreferredGap(ComponentPlacement.RELATED)

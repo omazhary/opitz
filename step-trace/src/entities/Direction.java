@@ -118,8 +118,8 @@ public class Direction extends AbstractEntity implements Cloneable {
          * Returns the vector representing the direction (0 -> X, 1 -> Y, 2 -> Z).
          * @return A float array containing the components.
          */
-        public float[] getComponents() {
-            float[] result = new float[3];
+        public Float[] getComponents() {
+            Float[] result = new Float[3];
             result[0] = this.x;
             result[1] = this.y;
             result[2] = this.z;

@@ -264,7 +264,7 @@ public class CADModel {
 	 * @return A String[] object containing the model's name and description.
 	 */
 	public String[] toModelListData() {
-		return new String[] {this.name, this.description};
+		return new String[] {this.identifier, this.name, this.description};
 	}
 	
 	/**
@@ -272,7 +272,7 @@ public class CADModel {
 	 * @return A String[] object containing the model's name and similarity.
 	 */
 	public String[] toSimListData() {
-		return new String[] {this.name, Double.toString(this.similarity)};
+		return new String[] {this.identifier, this.name, Double.toString(this.similarity)};
 	}
 	
 	@Override
