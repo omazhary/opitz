@@ -152,6 +152,80 @@ public class CADModel {
 		}
 		return true;
 	}
+	
+	/**
+	 * Updates the model data in the model list file.
+	 * @return TRUE if the update was successful, FALSE otherwise.
+	 */
+	public boolean updateModelData() {
+		boolean result = false;
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(this.getModelsFilePath());
+			org.jdom2.Document doc = (org.jdom2.Document) builder
+					.build(xmlFile);
+			Element rootNode = doc.getRootElement();
+			Iterator model = rootNode.getChildren().iterator();
+			while (model.hasNext()) {
+				Element child = (Element) model.next();
+				if (child.getChildText("identifier").equalsIgnoreCase(this.identifier)) {
+					child.getChild("part_name").setText(this.name);
+					child.getChild("part_gt_code").setText(this.gtCode);
+					child.getChild("part_image_path").setText(this.imagePath);
+					child.getChild("part_description").setText(this.description);
+					child.getChild("part_file_path").setText(this.path);
+					XMLOutputter xmloutput = new XMLOutputter();
+					xmloutput.output(doc, new FileWriter(this.getModelsFilePath()));
+					result = true;
+					break;
+				}
+			}
+		} catch (JDOMException e) {
+			System.err.println("Error: Unable to parse XML file.");
+			System.err.println(e.getMessage());
+			return false;
+		} catch (IOException e) {
+			System.err.println("Error: Unable to open XML file.");
+			System.err.println(e.getMessage());
+			return false;
+		}
+		return result;
+	}
+	
+	/**
+	 * Deletes the model from the index file.
+	 * @return TRUE on successful deletion, FALSE otherwise.
+	 */
+	public boolean deleteModel() {
+		boolean result = false;
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			File xmlFile = new File(this.getModelsFilePath());
+			org.jdom2.Document doc = (org.jdom2.Document) builder
+					.build(xmlFile);
+			Element rootNode = doc.getRootElement();
+			Iterator model = rootNode.getChildren().iterator();
+			while (model.hasNext()) {
+				Element child = (Element) model.next();
+				if (child.getChildText("identifier").equalsIgnoreCase(this.identifier)) {
+					rootNode.getChildren().remove(child);
+					XMLOutputter xmloutput = new XMLOutputter();
+					xmloutput.output(doc, new FileWriter(this.getModelsFilePath()));
+					result = true;
+					break;
+				}
+			}
+		} catch (JDOMException e) {
+			System.err.println("Error: Unable to parse XML file.");
+			System.err.println(e.getMessage());
+			return false;
+		} catch (IOException e) {
+			System.err.println("Error: Unable to open XML file.");
+			System.err.println(e.getMessage());
+			return false;
+		}
+		return result;
+	}
 
 	/**
 	 * Getter for the part identifier.
@@ -205,6 +279,46 @@ public class CADModel {
 	 */
 	public String getPartPath() {
 		return this.path;
+	}
+	
+	/**
+	 * Setter for the part name.
+	 * @param name The part's new name.
+	 */
+	public void setPartName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Setter for the part code.
+	 * @param code The part's new code.
+	 */
+	public void setPartGTCode(String code) {
+		this.gtCode = code;
+	}
+
+	/**
+	 * Setter for the part image path.
+	 * @param img The part's new image path.
+	 */
+	public void setPartImagePath(String img) {
+		this.imagePath = img;
+	}
+
+	/**
+	 * Setter for the part description.
+	 * @param desc The part's new description.
+	 */
+	public void setPartDescription(String desc) {
+		this.description = desc;
+	}
+
+	/**
+	 * Setter for the part step file path.
+	 * @param path The part's new path.
+	 */
+	public void setPartPath(String path) {
+		this.path = path;
 	}
 
 	/**

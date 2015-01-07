@@ -36,7 +36,16 @@ public class SettingsFrame extends JFrame {
 	private JSlider sliderD7;
 	private JSlider sliderD8;
 	private JSlider sliderD9;
-	private JTextField textField;
+	private JSlider sldRotDev;
+	private JSlider sldNonRotDev;
+	private JSlider sldSAS;
+	private JSlider sldIOTS;
+	private JSlider sldHED;
+	private JSlider sldHDST;
+	private JSlider sldHOS;
+	private JSlider sldTDS;
+	private JSlider sldTPS;
+	private JSlider sldPSM;
 
 	/**
 	 * Launch the application.
@@ -219,7 +228,6 @@ public class SettingsFrame extends JFrame {
 				weights[7] = new Integer(sliderD8.getValue());
 				weights[8] = new Integer(sliderD9.getValue());
 				pref.setWeightVector(weights);
-				dispose();
 			}
 		});
 		btnSave.setFont(new Font("Verdana", Font.PLAIN, 12));
@@ -235,14 +243,14 @@ public class SettingsFrame extends JFrame {
 		gl_panelSim.setHorizontalGroup(
 			gl_panelSim.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panelSim.createSequentialGroup()
-					.addGroup(gl_panelSim.createParallelGroup(Alignment.TRAILING)
+					.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panelSim.createSequentialGroup()
+							.addGap(12)
+							.addComponent(lblWeightVector))
+						.addGroup(gl_panelSim.createSequentialGroup()
+							.addContainerGap()
 							.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panelSim.createSequentialGroup()
-									.addGap(12)
-									.addComponent(lblWeightVector))
-								.addGroup(gl_panelSim.createSequentialGroup()
-									.addContainerGap()
 									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 										.addComponent(sliderD1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addGroup(gl_panelSim.createSequentialGroup()
@@ -275,41 +283,43 @@ public class SettingsFrame extends JFrame {
 										.addComponent(sliderD5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addGroup(gl_panelSim.createSequentialGroup()
 											.addGap(10)
-											.addComponent(label_3)))))
-							.addPreferredGap(ComponentPlacement.RELATED, 164, Short.MAX_VALUE)
-							.addGroup(gl_panelSim.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_panelSim.createSequentialGroup()
+											.addComponent(label_3)))
+									.addGap(77)
 									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 										.addComponent(sliderD6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addGroup(gl_panelSim.createSequentialGroup()
-											.addGap(10)
+											.addGap(12)
 											.addComponent(label_4)))
+									.addPreferredGap(ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+									.addGroup(gl_panelSim.createParallelGroup(Alignment.TRAILING, false)
+										.addGroup(gl_panelSim.createSequentialGroup()
+											.addComponent(lblAuxillaryDigitsWeights)
+											.addGap(27))
+										.addGroup(gl_panelSim.createSequentialGroup()
+											.addGap(10)
+											.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
+												.addComponent(sliderD7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addGroup(gl_panelSim.createSequentialGroup()
+													.addGap(12)
+													.addComponent(label_5)))
+											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
+												.addComponent(sliderD8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addGroup(gl_panelSim.createSequentialGroup()
+													.addGap(10)
+													.addComponent(label_6)))
+											.addGap(18)
+											.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
+												.addGroup(gl_panelSim.createSequentialGroup()
+													.addGap(10)
+													.addComponent(label_7))
+												.addComponent(sliderD9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
+								.addGroup(Alignment.TRAILING, gl_panelSim.createSequentialGroup()
+									.addComponent(btnSave)
 									.addGap(18)
-									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
-										.addComponent(sliderD7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addGroup(gl_panelSim.createSequentialGroup()
-											.addGap(10)
-											.addComponent(label_5)))
-									.addGap(16)
-									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
-										.addComponent(sliderD8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addGroup(gl_panelSim.createSequentialGroup()
-											.addGap(10)
-											.addComponent(label_6)))
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_panelSim.createSequentialGroup()
-											.addGap(10)
-											.addComponent(label_7))
-										.addComponent(sliderD9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-								.addGroup(gl_panelSim.createSequentialGroup()
-									.addComponent(lblAuxillaryDigitsWeights)
-									.addGap(28))))
-						.addGroup(gl_panelSim.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(btnSave)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnClose)))
+									.addComponent(btnClose)
+									.addGap(330)))
+							.addGap(75)))
 					.addContainerGap())
 		);
 		gl_panelSim.setVerticalGroup(
@@ -348,25 +358,25 @@ public class SettingsFrame extends JFrame {
 							.addGap(18)
 							.addGroup(gl_panelSim.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panelSim.createSequentialGroup()
-									.addComponent(sliderD7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(label_5))
-								.addGroup(gl_panelSim.createSequentialGroup()
-									.addComponent(sliderD6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(label_4))
-								.addGroup(gl_panelSim.createSequentialGroup()
 									.addComponent(sliderD9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(label_7))
+								.addGroup(gl_panelSim.createSequentialGroup()
+									.addGroup(gl_panelSim.createParallelGroup(Alignment.BASELINE)
+										.addComponent(sliderD6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(sliderD7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(gl_panelSim.createParallelGroup(Alignment.BASELINE)
+										.addComponent(label_4)
+										.addComponent(label_5)))
 								.addGroup(gl_panelSim.createSequentialGroup()
 									.addComponent(sliderD8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(label_6)))))
 					.addPreferredGap(ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
 					.addGroup(gl_panelSim.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnClose)
-						.addComponent(btnSave))
+						.addComponent(btnSave)
+						.addComponent(btnClose))
 					.addContainerGap())
 		);
 		panelSim.setLayout(gl_panelSim);
@@ -382,51 +392,224 @@ public class SettingsFrame extends JFrame {
 		});
 		btnClose_1.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
-		JButton btnSave_1 = new JButton("Save");
+		JButton btnSave_1 = new JButton("Save Thresholds");
 		btnSave_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				pref.setThreshold(0, sldRotDev.getValue());
+				pref.setThreshold(1, sldNonRotDev.getValue());
+				pref.setThreshold(2, sldSAS.getValue());
+				pref.setThreshold(3, sldIOTS.getValue());
+				pref.setThreshold(4, sldHED.getValue());
+				pref.setThreshold(5, sldHDST.getValue());
+				pref.setThreshold(6, sldHOS.getValue());
+				pref.setThreshold(7, sldTDS.getValue());
+				pref.setThreshold(8, sldTPS.getValue());
+				pref.setThreshold(9, sldPSM.getValue());
 			}
 		});
 		btnSave_1.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
-		JLabel lblDeviationDetectionSensitivity = new JLabel("Deviation Detection Sensitivity:");
+		JLabel lblDeviationDetectionSensitivity = new JLabel("Rotational Deviation Detection Sensitivity:");
 		lblDeviationDetectionSensitivity.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
-		textField = new JTextField();
-		textField.setHorizontalAlignment(SwingConstants.RIGHT);
-		textField.setFont(new Font("Verdana", Font.PLAIN, 12));
-		textField.setText("0.5");
-		textField.setColumns(10);
+		sldRotDev = new JSlider();
+		sldRotDev.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblNonrotationalDeviationDetection = new JLabel("Non-Rotational Deviation Detection Sensitivity:");
+		lblNonrotationalDeviationDetection.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		sldNonRotDev = new JSlider();
+		sldNonRotDev.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblShapeAxisStraightness = new JLabel("Shape Axis Straightness:");
+		lblShapeAxisStraightness.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		sldSAS = new JSlider();
+		sldSAS.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblInternalOperatingThread = new JLabel("Internal Operating Thread Sensitivity:");
+		lblInternalOperatingThread.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		sldIOTS = new JSlider();
+		sldIOTS.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblHoleEquidistanceSensitivity = new JLabel("Hole Equidistance Sensitivity:");
+		lblHoleEquidistanceSensitivity.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		sldHED = new JSlider();
+		sldHED.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblHoleDistributionSensitivity = new JLabel("Hole Distribution Sensitivity:");
+		lblHoleDistributionSensitivity.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		sldHDST = new JSlider();
+		sldHDST.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblHoleOrientationSensitivity = new JLabel("Hole Orientation Sensitivity:");
+		lblHoleOrientationSensitivity.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		sldHOS = new JSlider();
+		sldHOS.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblTeethDetectionSensitivity = new JLabel("Teeth Detection Sensitivity:");
+		lblTeethDetectionSensitivity.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		sldTDS = new JSlider();
+		sldTDS.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblTeethParallelismSensitivity = new JLabel("Teeth Parallelism Sensitivity:");
+		lblTeethParallelismSensitivity.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		sldTPS = new JSlider();
+		sldTPS.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel lblPlaneSurfaceMachining = new JLabel("Plane Surface Machining Sensitivity:");
+		lblPlaneSurfaceMachining.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		sldPSM = new JSlider();
+		sldPSM.setPaintTicks(true);
+		sldPSM.setMajorTickSpacing(20);
+		sldPSM.setMinorTickSpacing(10);
+		sldPSM.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel label_8 = new JLabel("0");
+		label_8.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JLabel label_9 = new JLabel("1");
+		label_9.setFont(new Font("Verdana", Font.PLAIN, 12));
 		GroupLayout gl_panelRec = new GroupLayout(panelRec);
 		gl_panelRec.setHorizontalGroup(
-			gl_panelRec.createParallelGroup(Alignment.TRAILING)
+			gl_panelRec.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panelRec.createSequentialGroup()
-					.addContainerGap(473, Short.MAX_VALUE)
-					.addComponent(btnSave_1)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnClose_1)
-					.addContainerGap())
-				.addGroup(Alignment.LEADING, gl_panelRec.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblDeviationDetectionSensitivity)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(textField, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(345, Short.MAX_VALUE))
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.TRAILING)
+						.addGroup(Alignment.LEADING, gl_panelRec.createSequentialGroup()
+							.addComponent(btnSave_1)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnClose_1))
+						.addGroup(gl_panelRec.createSequentialGroup()
+							.addComponent(lblShapeAxisStraightness, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(sldSAS, GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE))
+						.addGroup(gl_panelRec.createSequentialGroup()
+							.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNonrotationalDeviationDetection, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblDeviationDetectionSensitivity))
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(sldRotDev, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(sldNonRotDev, GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)))
+						.addGroup(gl_panelRec.createSequentialGroup()
+							.addComponent(lblInternalOperatingThread, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(sldIOTS, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panelRec.createSequentialGroup()
+							.addComponent(lblHoleEquidistanceSensitivity, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(sldHED, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panelRec.createSequentialGroup()
+							.addComponent(lblHoleDistributionSensitivity, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(sldHDST, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panelRec.createSequentialGroup()
+							.addComponent(lblHoleOrientationSensitivity, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(sldHOS, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panelRec.createSequentialGroup()
+							.addGroup(gl_panelRec.createParallelGroup(Alignment.TRAILING)
+								.addComponent(lblTeethDetectionSensitivity, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblTeethParallelismSensitivity, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panelRec.createParallelGroup(Alignment.TRAILING)
+								.addComponent(sldTDS, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE)
+								.addComponent(sldTPS, GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)))
+						.addGroup(gl_panelRec.createSequentialGroup()
+							.addComponent(lblPlaneSurfaceMachining, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panelRec.createSequentialGroup()
+									.addComponent(label_8)
+									.addPreferredGap(ComponentPlacement.RELATED, 274, Short.MAX_VALUE)
+									.addComponent(label_9, GroupLayout.PREFERRED_SIZE, 8, GroupLayout.PREFERRED_SIZE))
+								.addComponent(sldPSM, GroupLayout.PREFERRED_SIZE, 290, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap())
 		);
 		gl_panelRec.setVerticalGroup(
 			gl_panelRec.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panelRec.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panelRec.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblDeviationDetectionSensitivity)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 377, Short.MAX_VALUE)
+						.addComponent(sldRotDev, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNonrotationalDeviationDetection, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sldNonRotDev, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblShapeAxisStraightness, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sldSAS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblInternalOperatingThread, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sldIOTS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblHoleEquidistanceSensitivity, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sldHED, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblHoleDistributionSensitivity, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sldHDST, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblHoleOrientationSensitivity, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sldHOS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblTeethDetectionSensitivity, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sldTDS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblTeethParallelismSensitivity, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sldTPS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblPlaneSurfaceMachining, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(sldPSM, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panelRec.createParallelGroup(Alignment.LEADING)
+						.addComponent(label_8)
+						.addComponent(label_9, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
 					.addGroup(gl_panelRec.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnClose_1)
-						.addComponent(btnSave_1))
+						.addComponent(btnSave_1)
+						.addComponent(btnClose_1))
 					.addContainerGap())
 		);
 		panelRec.setLayout(gl_panelRec);
+		
+		// Applying the preferences values:
+		sldRotDev.setValue(this.pref.getDisplayThresholdByIndex(0));
+		sldNonRotDev.setValue(this.pref.getDisplayThresholdByIndex(1));
+		sldSAS.setValue(this.pref.getDisplayThresholdByIndex(2));
+		sldIOTS.setValue(this.pref.getDisplayThresholdByIndex(3));
+		sldHED.setValue(this.pref.getDisplayThresholdByIndex(4));
+		sldHDST.setValue(this.pref.getDisplayThresholdByIndex(5));
+		sldHOS.setValue(this.pref.getDisplayThresholdByIndex(6));
+		sldTDS.setValue(this.pref.getDisplayThresholdByIndex(7));
+		sldTPS.setValue(this.pref.getDisplayThresholdByIndex(8));
+		sldPSM.setValue(this.pref.getDisplayThresholdByIndex(9));
+		
+		sliderD1.setValue(this.pref.getWeightVector()[0]);
+		sliderD2.setValue(this.pref.getWeightVector()[1]);
+		sliderD3.setValue(this.pref.getWeightVector()[2]);
+		sliderD4.setValue(this.pref.getWeightVector()[3]);
+		sliderD5.setValue(this.pref.getWeightVector()[4]);
+		sliderD6.setValue(this.pref.getWeightVector()[5]);
+		sliderD7.setValue(this.pref.getWeightVector()[6]);
+		sliderD8.setValue(this.pref.getWeightVector()[7]);
+		sliderD9.setValue(this.pref.getWeightVector()[8]);
+		
 	}
 }

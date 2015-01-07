@@ -53,6 +53,8 @@ import entities.InitForm;
 import entities.Material;
 
 import javax.swing.JComboBox;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainWindow extends JFrame {
 
@@ -157,7 +159,7 @@ public class MainWindow extends JFrame {
 		mntmAddModel.setFont(new Font("Verdana", Font.PLAIN, 12));
 		mntmAddModel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CADModelFrame modelAdd = new CADModelFrame(true, null);
+				CADModelFrame modelAdd = new CADModelFrame(true, null, null, pref);
 				modelAdd.pack();
 				modelAdd.setVisible(true);
 			}
@@ -168,7 +170,7 @@ public class MainWindow extends JFrame {
 		JMenuItem mntmViewAvailableModels = new JMenuItem("View Available Models");
 		mntmViewAvailableModels.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CADModelListFrame model_list = new CADModelListFrame();
+				CADModelListFrame model_list = new CADModelListFrame(pref);
 				model_list.setVisible(true);
 			}
 		});
@@ -322,7 +324,7 @@ public class MainWindow extends JFrame {
 		JButton btnRunRecognition = new JButton("Run Recognition");
 		btnRunRecognition.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				recog.mainProcedure(txtFilePath.getText(), false, (Material) cboxMaterial.getSelectedItem(), (InitForm) cboxInitForm.getSelectedItem());
+				recog.mainProcedure(txtFilePath.getText(), false, (Material) cboxMaterial.getSelectedItem(), (InitForm) cboxInitForm.getSelectedItem(), pref);
 				txtRecCode.setText(recog.getCode());
 				String temp = "";
 				for (int i = 0; i < recog.getTrace().size(); i++) {
@@ -373,7 +375,7 @@ public class MainWindow extends JFrame {
 				printToLog("Weights set at: " + pref.getWeightVectorString());
 				CADModel[] simModels = calc.getSimilarModelsViaOpitz(new Opitz(txtRecCode.getText()), model_list, (threshold / 100), pref.getWeightVector());
 				printToLog("Similarity comparisons complete. " + simModels.length + " models found.");
-				DefaultTableModel tempTableModel = new DefaultTableModel(new Object[][] {}, new String[] {"Part Name", "Part Similarity %"}) {
+				DefaultTableModel tempTableModel = new DefaultTableModel(new Object[][] {}, new String[] {"ID", "Part Name", "Part Similarity %"}) {
 					@Override
 					public boolean isCellEditable(int row, int column) {
 						return false;
@@ -481,11 +483,21 @@ public class MainWindow extends JFrame {
 		textArea_log.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		tableSimModels = new JTable();
+		tableSimModels.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					CADModelList model_list = new CADModelList();
+					CADModelFrame temp = new CADModelFrame(false, model_list.getModel(tableSimModels.getSelectedRow()).getPartIdentifier(), null, pref);
+					temp.setVisible(true);
+				}
+			}
+		});
 		tableSimModels.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"Part Name", "Part Similarity %"
+				"ID", "Part Name", "Part Similarity %"
 			}
 		));
 		tableSimModels.setFont(new Font("Verdana", Font.PLAIN, 12));

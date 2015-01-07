@@ -76,6 +76,22 @@ public class CADModelList {
 	}
 	
 	/**
+	 * Retrieves a specific model via its identifier.
+	 * @param identifier The identifier of the desired model.
+	 * @return A reference to the desired model if it is found, null otherwise.
+	 */
+	public CADModel getModelViaID(String identifier) {
+		CADModel result = null;
+		for (int i = 0; i < this.models.length; i++) {
+			if (this.models[i].getPartIdentifier().equalsIgnoreCase(identifier)) {
+				result = this.models[i];
+				break;
+			}
+		}
+		return result;
+	}
+	
+	/**
 	 * Gets the current size of the model list.
 	 * @return An int containing the model list size.
 	 */

@@ -13,15 +13,23 @@ import javax.swing.JScrollPane;
 import javax.swing.JList;
 
 import entities.CADModelList;
+
 import javax.swing.JProgressBar;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
+
 import java.awt.Font;
+
 import javax.swing.AbstractListModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.ListSelectionModel;
+
+import utils.Preferences;
 
 public class CADModelListFrame extends JFrame {
 
@@ -29,6 +37,9 @@ public class CADModelListFrame extends JFrame {
 	private CADModelList model_list;
 	private JLabel labelProgress;
 	private JTable tableModels;
+	private JProgressBar progressBarList;
+	private CADModelListFrame tempFrame;
+	private Preferences pref;
 
 	/**
 	 * Launch the application.
@@ -43,7 +54,8 @@ public class CADModelListFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public CADModelListFrame() {
+	public CADModelListFrame(Preferences prefer) {
+		this.pref = prefer;
 		setTitle("Available Models");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -54,7 +66,7 @@ public class CADModelListFrame extends JFrame {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		
-		JProgressBar progressBarList = new JProgressBar();
+		this.progressBarList = new JProgressBar();
 		
 		labelProgress = new JLabel("");
 		labelProgress.setFont(new Font("Verdana", Font.PLAIN, 12));
@@ -84,11 +96,13 @@ public class CADModelListFrame extends JFrame {
 		);
 		
 		tableModels = new JTable();
+		tableModels.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableModels.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		tableModels.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-					CADModelFrame temp = new CADModelFrame(false, model_list.getModel(tableModels.getSelectedRow()).getPartIdentifier());
+					CADModelFrame temp = new CADModelFrame(true, model_list.getModel(tableModels.getSelectedRow()).getPartIdentifier(), tempFrame, pref);
 					temp.setVisible(true);
 				}
 			}
@@ -104,9 +118,18 @@ public class CADModelListFrame extends JFrame {
 		scrollPane.setViewportView(tableModels);
 		contentPane.setLayout(gl_contentPane);
 		
+		tempFrame = this;
+		
+		this.retrieveModels();
+	}
+	
+	/**
+	 * Retrieves the CAD models from the XML index.
+	 */
+	public void retrieveModels() {
 		this.labelProgress.setText("Checking XML index...");
 		this.model_list = new CADModelList();
-		progressBarList.setValue(50);
+		this.progressBarList.setValue(50);
 		this.labelProgress.setText("Retrieving Model info...");
 		
 		DefaultTableModel tempModel = new DefaultTableModel(new Object[][] {}, new String[] {"ID", "Part Name", "Part Description"}) {
@@ -119,11 +142,11 @@ public class CADModelListFrame extends JFrame {
 		for (int i  = 0; i < this.model_list.getModelListSize(); i++) {
 			int progressValue = (int) Math.ceil(50 + ((i / this.model_list.getModelListSize()) / 2));
 			tempModel.addRow(this.model_list.getModel(i).toModelListData());
-			progressBarList.setValue(progressValue);
+			this.progressBarList.setValue(progressValue);
 			this.labelProgress.setText((i + 1) + " of " + (this.model_list.getModelListSize() + 1) + " loaded...");
 		}
 		tableModels.setModel(tempModel);
 		this.labelProgress.setText("Models retrieved.");
-		progressBarList.setValue(100);
+		this.progressBarList.setValue(100);
 	}
 }

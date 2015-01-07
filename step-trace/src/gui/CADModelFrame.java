@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.AbstractButton;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.Icon;
@@ -32,6 +33,9 @@ import entities.Material;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +44,12 @@ import java.awt.Window.Type;
 import javax.swing.SwingConstants;
 
 import recognition.Recognizer;
+import utils.Preferences;
 
 import javax.swing.JComboBox;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class CADModelFrame extends JFrame {
 
@@ -55,9 +63,12 @@ public class CADModelFrame extends JFrame {
 	private JLabel lblStatus;
 	private JComboBox cboxMaterial;
 	private JComboBox cboxInitForm;
+	private JLabel lblIdentifier;
 	
+	private Preferences pref;	
 	private Recognizer recog;
 	private CADModel cadModel;
+	private CADModelListFrame list_CAD;
 
 	/**
 	 * Launch the application.
@@ -79,7 +90,19 @@ public class CADModelFrame extends JFrame {
 	 * Create the frame.
 	 */
 	@SuppressWarnings("unchecked")
-	public CADModelFrame(boolean editable, String identifier) {
+	public CADModelFrame(boolean editable, String identifier, CADModelListFrame list, final Preferences pref) {
+		
+		this.list_CAD = list;
+		this.pref = pref;
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				if (list_CAD != null) {
+					list_CAD.retrieveModels();
+				}
+			}
+		});
 		this.recog = new Recognizer();
 		
 		setAlwaysOnTop(true);
@@ -122,7 +145,7 @@ public class CADModelFrame extends JFrame {
 		JLabel lblPartIdentifier = new JLabel("Part Identifier:");
 		lblPartIdentifier.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
-		JLabel lblIdentifier = new JLabel("");
+		lblIdentifier = new JLabel("");
 		lblIdentifier.setFont(new Font("Verdana", Font.PLAIN, 12));
 		
 		JLabel lblPartPath = new JLabel("Part Path:");
@@ -145,7 +168,7 @@ public class CADModelFrame extends JFrame {
 	            } else {
 	            	txtFilePath.setText("An error has occured.");
 	            }
-	            recog.mainProcedure(txtFilePath.getText(), false, (Material) cboxMaterial.getSelectedItem(), (InitForm) cboxInitForm.getSelectedItem());
+	            recog.mainProcedure(txtFilePath.getText(), false, (Material) cboxMaterial.getSelectedItem(), (InitForm) cboxInitForm.getSelectedItem(), pref);
 	            txtCode.setText(recog.getCode());
 			}
 		});
@@ -270,11 +293,36 @@ public class CADModelFrame extends JFrame {
 		toolBar.add(btnAdd);
 		
 		JButton btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//String identifier = lblIdentifier.getText();
+				cadModel.setPartName(txtPartName.getText());
+				cadModel.setPartPath(txtFilePath.getText());
+				cadModel.setPartGTCode(txtCode.getText());
+				cadModel.setPartDescription(txtAreaPartDescription.getText());
+				cadModel.setPartImagePath(txtImagePath.getText());
+				if (cadModel.updateModelData()) {
+					lblStatus.setText("Model saved successfully.");
+				} else {
+					lblStatus.setText("Model was not saved!!");
+				}
+			}
+		});
 		btnSave.setFont(new Font("Verdana", Font.PLAIN, 12));
 		btnSave.setIcon(new ImageIcon(CADModelFrame.class.getResource("/icons/save_20.png")));
 		toolBar.add(btnSave);
 		
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//String identifier = lblIdentifier.getText();
+				if (cadModel.deleteModel()) {
+					lblStatus.setText("Model deleted successfully.");
+				} else {
+					lblStatus.setText("Model was not deleted!!");
+				}
+			}
+		});
 		btnDelete.setFont(new Font("Verdana", Font.PLAIN, 12));
 		btnDelete.setIcon(new ImageIcon(CADModelFrame.class.getResource("/icons/delete_20.png")));
 		toolBar.add(btnDelete);
@@ -377,8 +425,15 @@ public class CADModelFrame extends JFrame {
 			txtImagePath.setEditable(false);
 			txtAreaPartDescription.setEditable(false);
 			txtFilePath.setEditable(false);
-			this.cboxMaterial.setEditable(false);
-			this.cboxInitForm.setEditable(false);
+			//this.cboxMaterial.setEnabled(false);
+			this.setComboBoxReadOnly(this.cboxMaterial);
+			//this.cboxInitForm.setEnabled(false);
+			this.setComboBoxReadOnly(this.cboxInitForm);
+			btnAdd.setEnabled(false);
+			btnSave.setEnabled(false);
+			btnDelete.setEnabled(false);
+			btnBrowsePartFile.setEnabled(false);
+			btnBrowsePartImage.setEnabled(false);
 		}
 		
 		if (identifier != null) {
@@ -391,8 +446,15 @@ public class CADModelFrame extends JFrame {
 			this.txtFilePath.setText(this.cadModel.getPartPath());
 			this.updateImageLabel(this.lblImage);
 			lblIdentifier.setText(identifier);
+			String material = this.cadModel.getPartGTCode().charAt(5) + "";
+			String initForm = this.cadModel.getPartGTCode().charAt(6) + "";
+			this.cboxMaterial.setSelectedIndex(Integer.parseInt(material));
+			this.cboxInitForm.setSelectedIndex(Integer.parseInt(initForm));
+			btnAdd.setEnabled(false);
 		} else {
 			this.setTitle("New Model");
+			btnSave.setEnabled(false);
+			btnDelete.setEnabled(false);
 		}
 		
 	}
@@ -414,5 +476,28 @@ public class CADModelFrame extends JFrame {
 			label.setIcon(image_final);
 		}
 		return;
+	}
+	
+	private void setComboBoxReadOnly(JComboBox box) {
+		JTextField txt = (JTextField) box.getEditor().getEditorComponent();
+		txt.setEditable(false);
+		for (Object temp : box.getComponents()) {
+			if (temp instanceof AbstractButton) {
+				AbstractButton x = (AbstractButton) temp;
+				x.setEnabled(false);
+				for (ActionListener lis : box.getActionListeners()) {
+					box.removeActionListener(lis);
+				}
+				for (MouseListener lis : box.getMouseListeners()) {
+					box.removeMouseListener(lis);
+				}
+				for (MouseMotionListener lis : box.getMouseMotionListeners()) {
+					box.removeMouseMotionListener(lis);
+				}
+				for (MouseWheelListener lis : box.getMouseWheelListeners()) {
+					box.removeMouseWheelListener(lis);
+				}
+			}
+		}
 	}
 }

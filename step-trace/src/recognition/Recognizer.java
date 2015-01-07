@@ -38,6 +38,7 @@ import javax.swing.border.EmptyBorder;
 import keepers.CartesianPointKeeper;
 import keepers.MaxMeasures;
 import utils.CommonUtils;
+import utils.Preferences;
 import utils.StepFileReader;
 
 public class Recognizer {
@@ -51,10 +52,12 @@ public class Recognizer {
 	private MaxMeasures m;
 	private CartesianPoint absoluteCenter;
 	private String code;
+	private Preferences pref;
 
 	public String mainProcedure(String filePath, boolean isTest,
-			Material material, InitForm initialForm) {
+			Material material, InitForm initialForm, Preferences pref) {
 		this.clearAll();
+		this.pref = pref;
 		this.isTest = isTest;
 		print("**** Start: " + filePath);
 		int firstDigit = -1, secondDigit = -1, thirdDigit = -1, fourthDigit = -1, fifthDigit = -1, sixthDigit = -1, seventhDigit = -1, eighthDigit = -1, ninthDigit = -1;
@@ -91,8 +94,8 @@ public class Recognizer {
 				}
 			}
 			circ_rat = circles / all_edges;
-			System.out.println(circ_rat);
-			if (circ_rat > 0.5) {
+			// TODO: Put threshold in preferences.
+			if (circ_rat >= this.pref.getThresholds()[0]) {
 				firstDigit = rat <= 0.5 ? 0 : (rat >= 0.5 && rat < 3) ? 1
 						: rat >= 3 ? 2 : -1;
 			} else {
@@ -144,20 +147,20 @@ public class Recognizer {
 					}
 					// TODO: Put this threshold in the preferences frame.
 				} else if (bottom.getFaceOuterBound().areAdjacentsXZOriented()
-						&& !cs.hasDeviations(0.5)) {
+						&& !cs.hasDeviations(this.pref.getThresholds()[1])) {
 					secondDigit = 4;
 					print("Any flat shape other than 0 to 3");
 					// TODO: Put this threshold in the preferences frame.
 				} else if ((bottom.getFaceOuterBound().isRectangle() || bottom
 						.getFaceOuterBound().isTriangle())
-						&& cs.hasDeviations(0.5)) {
+						&& cs.hasDeviations(this.pref.getThresholds()[1])) {
 					secondDigit = 5;
 					print("Flat components, rectangular or right-angled with small deviations due to casting, welding, forming");
 					// TODO: Put this threshold in the preferences frame.
 				} else if ((bottom.getFaceOuterBound().isAllAnglesTheSame()
 						|| bottom.getFaceOuterBound().isCircularAndOrtogonal() || bottom
 						.getFaceOuterBound().areAdjacentsXZOriented())
-						&& cs.hasDeviations(0.5)) {
+						&& cs.hasDeviations(this.pref.getThresholds()[1])) {
 					secondDigit = 6;
 					print("Flat components, round or of any shape other than 5");
 				} else if (cs.isRegularlyArched()) {
@@ -297,7 +300,8 @@ public class Recognizer {
 								// frame.
 							} else if (cs.getFrontPlane().getSurfGeometry() != cs
 									.getBackPlane().getSurfGeometry()
-									&& !cs.isShapeAxisStraight(0.1)) {
+									&& !cs.isShapeAxisStraight(this.pref
+											.getThresholds()[2])) {
 								secondDigit = 8;
 								print("Formed component with deviations in the main axis");
 							} else {
@@ -418,7 +422,8 @@ public class Recognizer {
 					print("Functional taper");
 					thirdDigit = 7;
 					// TODO: Threshold in preferences pane.
-				} else if (cs.hasInternalOperatingThread(0.9)) {
+				} else if (cs.hasInternalOperatingThread(this.pref
+						.getThresholds()[3])) {
 					print("Operating thread");
 					thirdDigit = 8;
 				} else {
@@ -427,7 +432,9 @@ public class Recognizer {
 				}
 			}
 		} else if (firstDigit < 5) {
-			if ((this.getExternMachinigRotational(cylinderCount) != 0) && (cs.hasInternalOperatingThread(0.9) || cs.hasInternalScrewThread())) {
+			if ((this.getExternMachinigRotational(cylinderCount) != 0)
+					&& (cs.hasInternalOperatingThread(0.9) || cs
+							.hasInternalScrewThread())) {
 				print("Ext. and int. shape...");
 				if (cs.hasExternalScrewThread() || cs.hasInternalScrewThread()) {
 					thirdDigit = 7;
@@ -436,8 +443,10 @@ public class Recognizer {
 					thirdDigit = 6;
 					print("Machined");
 				}
-				//TODO: Preferences pane threshold.
-			} else if (cs.hasInternalOperatingThread(0.9) || cs.hasInternalScrewThread()) {
+				// TODO: Preferences pane threshold.
+			} else if (cs
+					.hasInternalOperatingThread(this.pref.getThresholds()[3])
+					|| cs.hasInternalScrewThread()) {
 				print("Internal shape...");
 				if (cs.hasInternalScrewThread()) {
 					thirdDigit = 5;
@@ -471,7 +480,7 @@ public class Recognizer {
 
 	private int getExternMachinigRotational(int cylinderCount) {
 		if (hasGroove(true, cs)) {
-//			print("machining: external groove is found");
+			// print("machining: external groove is found");
 			if (cylinderCount == 1 || cylinderCount == 2) {
 				return 3;
 			} else if (cylinderCount >= 3) {
@@ -479,10 +488,10 @@ public class Recognizer {
 			}
 		} else {
 			if (cylinderCount == 2) {
-//				print("no external machining");
+				// print("no external machining");
 				return 1;
 			} else if (cylinderCount >= 3) {
-//				print("no external machining");
+				// print("no external machining");
 				return 4;
 			}
 		}
@@ -523,37 +532,37 @@ public class Recognizer {
 		}
 		if (cs.hasUpperMachining()) {
 			fourthDigit = 7;
-			print("machining: curved surface");
+			print("Machining: curved surface");
 		} else if (k == 2) {
 			if (cs.getTopPlane().getFaceOuterBound().hasTopChamfers()) {
 				fourthDigit = 1;
-				print("machining: has chambers");
+				print("Machining: has chambers");
 			} else if (isGroove) {
 				fourthDigit = 5;
-				print("machining: external groove is found");
+				print("Machining: external groove is found");
 			} else {
 				fourthDigit = 0;
-				print("machining: no machining");
+				print("Machining: no machining");
 			}
 		} else if (k == 3) {
 			if (!isGroove) {
 				fourthDigit = 2;
-				print("machining: stepped 2");
+				print("Machining: stepped 2");
 			} else {
 				fourthDigit = 6;
-				print("machining: stepped 2 + groove");
+				print("Machining: stepped 2 + groove");
 			}
 		} else if (k > 3) {
 			if (!isGroove) {
 				fourthDigit = 3;
-				print("machining: stepped > 2");
+				print("Machining: stepped > 2");
 			} else {
 				fourthDigit = 6;
-				print("machining: stepped 2 + groove");
+				print("Machining: stepped 2 + groove");
 			}
 		} else {
 			fourthDigit = 0;
-			print("machining: no machining");
+			print("Machining: no machining");
 		}
 		return fourthDigit;
 	}
@@ -563,16 +572,16 @@ public class Recognizer {
 		int innerHoles = cs.getThroughHolesCount();
 		if (innerHoles == 0) {
 			thirdDigit = 0;
-			print("inner shape: no principal bores");
+			print("Inner shape: no principal bores");
 		} else if (innerHoles == 1) {
 			thirdDigit = 1;
-			print("one principal bore");
+			print("One principal bore");
 		} else if (innerHoles == 2) {
 			thirdDigit = 4;
-			print("two principal bores, parallel");
+			print("Two principal bores, parallel");
 		} else if (innerHoles > 2) {
 			thirdDigit = 5;
-			print("several principal bores, parallel");
+			print("Several principal bores, parallel");
 		} else if (getExternMachinigRotational(1) != 0 && innerHoles == 1) {
 			thirdDigit = 2;
 			print("One principal bore, stepped to one or both ends");
@@ -589,15 +598,17 @@ public class Recognizer {
 	private int getFifthDigit(int firstDigit) {
 		int result = 5;
 		// If there are no holes and no teeth.
-		boolean teethExist = cs.teethExist(0.6);
+		boolean teethExist = cs.teethExist(this.pref.getThresholds()[7]);
 		if (cs.getHoleCount() == 0 && !teethExist) {
 			return 0;
 		} else {
 			// TODO: Put thresholds in preferences frame.
-			boolean holesEquidistant = cs.areHolesEquidistant(0.9);
+			boolean holesEquidistant = cs.areHolesEquidistant(this.pref
+					.getThresholds()[4]);
 			boolean holesEvenlyDistributed = cs.areHolesEvenlyDistributed(
-					absoluteCenter, 0.9);
-			boolean holesSameOrientation = cs.holesHaveSameOrientation(0.9);
+					absoluteCenter, this.pref.getThresholds()[5]);
+			boolean holesSameOrientation = cs
+					.holesHaveSameOrientation(this.pref.getThresholds()[6]);
 			boolean holesRadial = cs.areHolesRadial();
 			boolean holesAxial = cs.areHolesAxial();
 			boolean teethParallel = false;
@@ -610,7 +621,8 @@ public class Recognizer {
 			System.out.println("Axiality is " + holesAxial);
 			System.out.println("Teeth Existence is " + teethExist);
 			if (firstDigit < 3) {
-				teethParallel = cs.teethParalleltoRotationAxis(0.9, 0.006);
+				teethParallel = cs.teethParalleltoRotationAxis(
+						this.pref.getThresholds()[8], 0.006);
 				teethGeometry = cs.getTeethGeometry();
 				System.out.println("Teeth Parallelism is " + teethParallel);
 				System.out.println("Teeth Geometry is " + teethGeometry);
@@ -817,7 +829,43 @@ public class Recognizer {
 	 * @return An integer containing the ninth digit corresponding to the model.
 	 */
 	private int getNinthDigit() {
-		return 0;
+		boolean d2 = this.pref.checkDefault(1) && this.pref.checkDefault(2);
+		boolean d3 = this.pref.checkDefault(3);
+		boolean d4 = this.pref.checkDefault(9);
+		boolean d5 = this.pref.checkDefault(4) && this.pref.checkDefault(5)
+				&& this.pref.checkDefault(6) && this.pref.checkDefault(7)
+				&& this.pref.checkDefault(8);
+		if (d2 && d3 && d4 && d5) {
+			print("Accuracy: Full");
+			return 9;
+		} else if (d3 && d4) {
+			print("Accuracy: 3 and 4");
+			return 8;
+		} else if (d2 && d5) {
+			print("Accuracy: 2 and 5");
+			return 7;
+		} else if (d2 && d4) {
+			print("Accuracy: 2 and 4");
+			return 6;
+		} else if (d2 && d3) {
+			print("Accuracy: 2 and 3");
+			return 5;
+		} else if (d5) {
+			print("Accuracy: 5");
+			return 4;
+		} else if (d4) {
+			print("Accuracy: 4");
+			return 3;
+		} else if (d3) {
+			print("Accuracy: 3");
+			return 2;
+		} else if (d2) {
+			print("Accuracy: 2");
+			return 1;
+		} else {
+			print("Accuracy: None specified");
+			return 0;
+		}
 	}
 
 	/**
