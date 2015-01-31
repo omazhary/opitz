@@ -90,10 +90,10 @@ public class CADModelFrame extends JFrame {
 	 * Create the frame.
 	 */
 	@SuppressWarnings("unchecked")
-	public CADModelFrame(boolean editable, String identifier, CADModelListFrame list, final Preferences pref) {
+	public CADModelFrame(boolean editable, String identifier, CADModelListFrame list, Preferences preferences) {
 		
 		this.list_CAD = list;
-		this.pref = pref;
+		this.pref = preferences;
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -168,6 +168,7 @@ public class CADModelFrame extends JFrame {
 	            } else {
 	            	txtFilePath.setText("An error has occured.");
 	            }
+	            System.out.println(txtFilePath.getText());
 	            recog.mainProcedure(txtFilePath.getText(), false, (Material) cboxMaterial.getSelectedItem(), (InitForm) cboxInitForm.getSelectedItem(), pref);
 	            txtCode.setText(recog.getCode());
 			}
@@ -466,7 +467,9 @@ public class CADModelFrame extends JFrame {
 				image_raw = ImageIO.read(new File(txtImagePath.getText()));				
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				//e1.printStackTrace();
+				label.setText("Image Display Error!!");
+				return;
 			}
 			if (label.getWidth() == 0 || label.getHeight() == 0) {
 				label.setSize(240, 175);

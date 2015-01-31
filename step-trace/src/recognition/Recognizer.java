@@ -43,7 +43,7 @@ import utils.StepFileReader;
 
 public class Recognizer {
 
-	private final long serialVersionUID = 1L;
+	//private final long serialVersionUID = 1L;
 
 	private List<String> trace = new ArrayList<String>();
 	private boolean showGUI = true;
@@ -323,6 +323,22 @@ public class Recognizer {
 		seventhDigit = getSeventhDigit(material);
 		eighthDigit = getEighthDigit(initialForm);
 		ninthDigit = getNinthDigit();
+		
+		if (firstDigit < 0) {
+			firstDigit = 9;
+		}
+		if (secondDigit < 0) {
+			secondDigit = 9;
+		}
+		if (thirdDigit < 0) {
+			thirdDigit = 9;
+		}
+		if (fourthDigit < 0) {
+			fourthDigit = 9;
+		}
+		if (fifthDigit < 0) {
+			fifthDigit = 9;
+		}
 
 		String res = "" + firstDigit + secondDigit + thirdDigit + fourthDigit
 				+ fifthDigit + sixthDigit + seventhDigit + eighthDigit
@@ -613,19 +629,19 @@ public class Recognizer {
 			boolean holesAxial = cs.areHolesAxial();
 			boolean teethParallel = false;
 			String teethGeometry = "";
-			System.out.println("Equidistance is " + holesEquidistant);
+/*			System.out.println("Equidistance is " + holesEquidistant);
 			System.out.println("Equidistribution is " + holesEvenlyDistributed);
 			System.out
 					.println("Similar Orientation is " + holesSameOrientation);
 			System.out.println("Radiality is " + holesRadial);
 			System.out.println("Axiality is " + holesAxial);
-			System.out.println("Teeth Existence is " + teethExist);
+			System.out.println("Teeth Existence is " + teethExist);*/
 			if (firstDigit < 3) {
 				teethParallel = cs.teethParalleltoRotationAxis(
 						this.pref.getThresholds()[8], 0.006);
 				teethGeometry = cs.getTeethGeometry();
-				System.out.println("Teeth Parallelism is " + teethParallel);
-				System.out.println("Teeth Geometry is " + teethGeometry);
+	/*			System.out.println("Teeth Parallelism is " + teethParallel);
+				System.out.println("Teeth Geometry is " + teethGeometry);*/
 			}
 			result = 1;
 			print("Holes found: " + cs.getHoleCount());
@@ -902,6 +918,7 @@ public class Recognizer {
 		this.m = null;
 		this.absoluteCenter = null;
 		this.code = "";
+		this.pref = null;
 	}
 
 	/**

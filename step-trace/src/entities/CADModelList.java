@@ -63,7 +63,8 @@ public class CADModelList {
 	 * @return A string containing the path to the model repository.
 	 */
 	private String getModelsFilePath() {
-		return this.getCurrentDirectory() + "/bin/xml/models.xml";
+		return this.getCurrentDirectory() + "/xml/models.xml";
+		//return CADModelList.class.getResource("/xml/models.xml").getPath();
 	}
 	
 	/**

@@ -344,7 +344,8 @@ public class CADModel {
 	 * @return A string containing the path to the model repository.
 	 */
 	private String getModelsFilePath() {
-		return this.getCurrentDirectory() + "/bin/xml/models.xml";
+		return this.getCurrentDirectory() + "/xml/models.xml";
+		//return CADModel.class.getResource("/xml/models.xml").getPath();
 	}
 
 	/**

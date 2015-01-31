@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Omar Moustafa <Omar Moustafa at azlabs>
+ * @author Omar Elazhary
  */
 public class MySQLConn implements IDBConn {
 
@@ -22,12 +22,12 @@ public class MySQLConn implements IDBConn {
 	 */
 	public MySQLConn(String host, String username, String password,
 			String database) {
+		String connectionUrl = "jdbc:mysql://" + host + "/" + database
+				+ "?user=" + username + "&password=" + password;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			// Don't forget to change the username and password values in the
 			// connectionUrl text to those of your own machine.
-			String connectionUrl = "jdbc:mysql://" + host + "/" + database
-					+ "?user=" + username + "&password=" + password;
 			this.conn = DriverManager.getConnection(connectionUrl);
 			this.stmt = this.conn.createStatement();
 		} catch (SQLException e) {

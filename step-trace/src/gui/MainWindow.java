@@ -60,7 +60,7 @@ public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtFilePath;
-	private Recognizer recog;
+//	private Recognizer recog;
 	private JTextField txtRecCode;
 	private JTextArea textArea_log;
 	private JTable tableSimModels;
@@ -288,6 +288,17 @@ public class MainWindow extends JFrame {
 		mntmXMLExport.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/export_20.png")));
 		mntmXMLExport.setFont(new Font("Verdana", Font.PLAIN, 12));
 		mnXML.add(mntmXMLExport);
+		
+		JMenuItem mntmDBConn = new JMenuItem("Synchronize with a Database");
+		mntmDBConn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DBSyncFrame sync = new DBSyncFrame();
+				sync.setVisible(true);
+			}
+		});
+		mntmDBConn.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/webDB_20.png")));
+		mnDtSrc.add(mntmDBConn);
+		mntmDBConn.setFont(new Font("Verdana", Font.PLAIN, 12));
 		mntmAdvancedOptions.setIcon(new ImageIcon(MainWindow.class.getResource("/icons/settings_20.png")));
 		mntmAdvancedOptions.setFont(new Font("Verdana", Font.PLAIN, 12));
 		mnTools.add(mntmAdvancedOptions);
@@ -295,7 +306,7 @@ public class MainWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		this.recog = new Recognizer();
+		//this.recog = new Recognizer();
 		
 		JButton btnChooseFile = new JButton("Choose File");
 		btnChooseFile.addActionListener(new ActionListener() {
@@ -324,6 +335,7 @@ public class MainWindow extends JFrame {
 		JButton btnRunRecognition = new JButton("Run Recognition");
 		btnRunRecognition.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Recognizer recog = new Recognizer();
 				recog.mainProcedure(txtFilePath.getText(), false, (Material) cboxMaterial.getSelectedItem(), (InitForm) cboxInitForm.getSelectedItem(), pref);
 				txtRecCode.setText(recog.getCode());
 				String temp = "";
@@ -488,7 +500,7 @@ public class MainWindow extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					CADModelList model_list = new CADModelList();
-					CADModelFrame temp = new CADModelFrame(false, model_list.getModel(tableSimModels.getSelectedRow()).getPartIdentifier(), null, pref);
+					CADModelFrame temp = new CADModelFrame(false, tableSimModels.getValueAt(tableSimModels.getSelectedRow(), 0).toString(), null, pref);
 					temp.setVisible(true);
 				}
 			}

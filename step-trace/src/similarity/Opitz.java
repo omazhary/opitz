@@ -28,6 +28,7 @@ public class Opitz implements GTCode {
 	 * @return An Integer array that contains the separate digits of the Opitz code.
 	 */
 	private Integer[] transformString(String src) {
+		src = src.replace("-", "");
 		Integer[] result = new Integer[13];
 		for (int i = 0; i < 13; i++){
 			if (i > src.length() - 1) {
@@ -45,6 +46,14 @@ public class Opitz implements GTCode {
 	 */
 	public Integer[] getCode() {
 		return this.code;
+	}
+	
+	/**
+	 * Returns the string representation of the Opitz code.
+	 */
+	@Override
+	public String toString() {
+		return this.src;
 	}
 
 }
