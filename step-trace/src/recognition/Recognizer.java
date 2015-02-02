@@ -1,5 +1,6 @@
 package recognition;
 
+import entities.AbstractEntity;
 import entities.AdvancedFace;
 import entities.CartesianPoint;
 import entities.Circle;
@@ -61,9 +62,7 @@ public class Recognizer {
 		this.isTest = isTest;
 		print("**** Start: " + filePath);
 		int firstDigit = -1, secondDigit = -1, thirdDigit = -1, fourthDigit = -1, fifthDigit = -1, sixthDigit = -1, seventhDigit = -1, eighthDigit = -1, ninthDigit = -1;
-		StepFileReader sfr = new StepFileReader(
-				filePath == null ? (CommonUtils._PATH_PRODUCTION + "50.03220-01/03220-01.stp")
-						: filePath);
+		StepFileReader sfr = new StepFileReader(filePath);
 		cs = new ClosedShell(sfr.getClosedShellLineId());
 		m = CartesianPointKeeper.getMaxShapeMeasures();
 		absoluteCenter = getAbsoluteCenter(m);
@@ -919,6 +918,8 @@ public class Recognizer {
 		this.absoluteCenter = null;
 		this.code = "";
 		this.pref = null;
+		AbstractEntity.linesMap = null;
+		CartesianPointKeeper.clearAll();
 	}
 
 	/**

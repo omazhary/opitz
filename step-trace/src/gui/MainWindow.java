@@ -316,7 +316,7 @@ public class MainWindow extends JFrame {
 	            if (rVal == JFileChooser.APPROVE_OPTION) {
 	                txtFilePath.setText(c.getSelectedFile().getAbsolutePath());
 	            } else if (rVal == JFileChooser.CANCEL_OPTION) {
-	                txtFilePath.setText("File path...");
+	                return;
 	            } else {
 	            	txtFilePath.setText("An error has occured.");
 	            }

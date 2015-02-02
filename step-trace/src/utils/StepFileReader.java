@@ -47,6 +47,7 @@ public class StepFileReader {
             } finally {
                 br.close();
             }
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

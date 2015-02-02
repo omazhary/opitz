@@ -28,7 +28,7 @@ public class MainClass {
 			}
 		}
 		
-		MainWindow window = new MainWindow();
+		final MainWindow window = new MainWindow();
 		//window.show();
 		window.setVisible(true);
 	}
