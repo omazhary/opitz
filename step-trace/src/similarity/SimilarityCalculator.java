@@ -41,8 +41,7 @@ public class SimilarityCalculator {
 			if ((code.getCode()[0] < 3 && tempCode.getCode()[0] < 3)
 					|| (code.getCode()[0] < 5 && tempCode.getCode()[0] < 5
 							&& code.getCode()[0] > 2 && tempCode.getCode()[0] > 2)
-					|| (code.getCode()[0] < 9 && tempCode.getCode()[0] < 9
-							&& code.getCode()[0] > 5 && tempCode.getCode()[0] > 5)) {
+					|| (code.getCode()[0] == tempCode.getCode()[0])) {
 				double tempSim = this.calculator.getSimilarity(
 						this.applyWeights(code.getCode(), weights),
 						this.applyWeights(tempCode.getCode(), weights));
